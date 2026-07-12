@@ -1,0 +1,68 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+# -------------------------------------------------------------------
+# af.department
+# -------------------------------------------------------------------
+access_af_department_employee,af.department.employee,model_af_department,assetflow.group_assetflow_employee,1,0,0,0
+access_af_department_manager,af.department.manager,model_af_department,assetflow.group_assetflow_manager,1,0,0,0
+access_af_department_admin,af.department.admin,model_af_department,assetflow.group_assetflow_admin,1,1,1,1
+# -------------------------------------------------------------------
+# af.employee
+# -------------------------------------------------------------------
+access_af_employee_employee,af.employee.employee,model_af_employee,assetflow.group_assetflow_employee,1,0,0,0
+access_af_employee_manager,af.employee.manager,model_af_employee,assetflow.group_assetflow_manager,1,0,0,0
+access_af_employee_admin,af.employee.admin,model_af_employee,assetflow.group_assetflow_admin,1,1,1,1
+# -------------------------------------------------------------------
+# af.asset.category
+# -------------------------------------------------------------------
+access_af_asset_category_employee,af.asset.category.employee,model_af_asset_category,assetflow.group_assetflow_employee,1,0,0,0
+access_af_asset_category_manager,af.asset.category.manager,model_af_asset_category,assetflow.group_assetflow_manager,1,1,1,0
+access_af_asset_category_admin,af.asset.category.admin,model_af_asset_category,assetflow.group_assetflow_admin,1,1,1,1
+# -------------------------------------------------------------------
+# af.asset
+# -------------------------------------------------------------------
+access_af_asset_employee,af.asset.employee,model_af_asset,assetflow.group_assetflow_employee,1,0,0,0
+access_af_asset_manager,af.asset.manager,model_af_asset,assetflow.group_assetflow_manager,1,1,1,0
+access_af_asset_admin,af.asset.admin,model_af_asset,assetflow.group_assetflow_admin,1,1,1,1
+# -------------------------------------------------------------------
+# af.asset.allocation
+# -------------------------------------------------------------------
+access_af_asset_allocation_employee,af.asset.allocation.employee,model_af_asset_allocation,assetflow.group_assetflow_employee,1,0,0,0
+access_af_asset_allocation_manager,af.asset.allocation.manager,model_af_asset_allocation,assetflow.group_assetflow_manager,1,1,1,0
+access_af_asset_allocation_admin,af.asset.allocation.admin,model_af_asset_allocation,assetflow.group_assetflow_admin,1,1,1,1
+# -------------------------------------------------------------------
+# af.transfer.request
+# -------------------------------------------------------------------
+access_af_transfer_request_employee,af.transfer.request.employee,model_af_transfer_request,assetflow.group_assetflow_employee,1,1,1,0
+access_af_transfer_request_manager,af.transfer.request.manager,model_af_transfer_request,assetflow.group_assetflow_manager,1,1,1,0
+access_af_transfer_request_admin,af.transfer.request.admin,model_af_transfer_request,assetflow.group_assetflow_admin,1,1,1,1
+# -------------------------------------------------------------------
+# af.allocation.history
+# -------------------------------------------------------------------
+access_af_allocation_history_employee,af.allocation.history.employee,model_af_allocation_history,assetflow.group_assetflow_employee,1,0,0,0
+access_af_allocation_history_manager,af.allocation.history.manager,model_af_allocation_history,assetflow.group_assetflow_manager,1,0,0,0
+access_af_allocation_history_admin,af.allocation.history.admin,model_af_allocation_history,assetflow.group_assetflow_admin,1,1,1,1
+# -------------------------------------------------------------------
+# af.activity
+# -------------------------------------------------------------------
+access_af_activity_employee,af.activity.employee,model_af_activity,assetflow.group_assetflow_employee,1,0,0,0
+access_af_activity_manager,af.activity.manager,model_af_activity,assetflow.group_assetflow_manager,1,0,0,0
+access_af_activity_admin,af.activity.admin,model_af_activity,assetflow.group_assetflow_admin,1,1,1,1
+# -------------------------------------------------------------------
+# af.notification
+# -------------------------------------------------------------------
+access_af_notification_employee,af.notification.employee,model_af_notification,assetflow.group_assetflow_employee,1,1,1,0
+access_af_notification_manager,af.notification.manager,model_af_notification,assetflow.group_assetflow_manager,1,1,1,0
+access_af_notification_admin,af.notification.admin,model_af_notification,assetflow.group_assetflow_admin,1,1,1,1
+# -------------------------------------------------------------------
+# af.approval
+# -------------------------------------------------------------------
+access_af_approval_employee,af.approval.employee,model_af_approval,assetflow.group_assetflow_employee,1,0,0,0
+access_af_approval_manager,af.approval.manager,model_af_approval,assetflow.group_assetflow_manager,1,1,1,0
+access_af_approval_admin,af.approval.admin,model_af_approval,assetflow.group_assetflow_admin,1,1,1,1
+# -------------------------------------------------------------------
+# af.system.alert
+# -------------------------------------------------------------------
+access_af_system_alert_employee,af.system.alert.employee,model_af_system_alert,assetflow.group_assetflow_employee,1,0,0,0
+access_af_system_alert_manager,af.system.alert.manager,model_af_system_alert,assetflow.group_assetflow_manager,1,1,1,0
+access_af_system_alert_admin,af.system.alert.admin,model_af_system_alert,assetflow.group_assetflow_admin,1,1,1,1
+

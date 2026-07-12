@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- ============================================================
+             Approval: Tree View
+             ============================================================ -->
+        <record id="view_af_approval_tree" model="ir.ui.view">
+            <field name="name">af.approval.tree</field>
+            <field name="model">af.approval</field>
+            <field name="arch" type="xml">
+                <tree string="Approvals" default_order="request_date desc"
+                      decoration-danger="priority == 'critical'"
+                      decoration-warning="priority == 'high'"
+                      decoration-info="status == 'pending'"
+                      decoration-success="status == 'approved'"
+                      decoration-muted="status == 'rejected'">
+                    <field name="name"/>
+                    <field name="request_date" widget="datetime"/>
+                    <field name="approval_type" widget="badge"/>
+                    <field name="title"/>
+                    <field name="requested_by"/>
+                    <field name="assigned_to"/>
+                    <field name="asset_id" optional="show"/>
+                    <field name="department_id" optional="show"/>
+                    <field name="priority" widget="badge"
+                           decoration-danger="priority == 'critical'"
+                           decoration-warning="priority == 'high'"
+                           decoration-info="priority == 'medium'"
+                           decoration-success="priority == 'low'"/>
+                    <field name="status" widget="badge"
+                           decoration-info="status == 'pending'"
+                           decoration-success="status == 'approved'"
+                           decoration-danger="status == 'rejected'"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- ============================================================
+             Approval: Form View
+             ============================================================ -->
+        <record id="view_af_approval_form" model="ir.ui.view">
+            <field name="name">af.approval.form</field>
+            <field name="model">af.approval</field>
+            <field name="arch" type="xml">
+                <form string="Approval">
+                    <header>
+                        <button name="action_approve" type="object"
+                                string="Approve" class="btn-success"
+                                invisible="status != 'pending'"
+                                groups="assetflow.group_assetflow_manager"/>
+                        <button name="action_reject" type="object"
+                                string="Reject" class="btn-danger"
+                                invisible="status != 'pending'"
+                                groups="assetflow.group_assetflow_manager"/>
+                        <field name="status" widget="statusbar"
+                               statusbar_visible="pending,approved,rejected"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="title" readonly="1"/>
+                            </h1>
+                            <h4>
+                                <field name="name" readonly="1"/>
+                            </h4>
+                        </div>
+                        <group>
+                            <group string="Request Details">
+                                <field name="approval_type"/>
+                                <field name="priority"/>
+                                <field name="request_date"/>
+                                <field name="response_date"/>
+                            </group>
+                            <group string="People">
+                                <field name="requested_by"/>
+                                <field name="assigned_to"/>
+                                <field name="department_id"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Related Record">
+                                <field name="asset_id"/>
+                                <field name="related_model" groups="assetflow.group_assetflow_admin"/>
+                                <field name="related_record_id" groups="assetflow.group_assetflow_admin"/>
+                            </group>
+                        </group>
+                        <group string="Description">
+                            <field name="description" nolabel="1" colspan="2"/>
+                        </group>
+                        <group string="Remarks">
+                            <field name="remarks" nolabel="1" colspan="2"
+                                   placeholder="Add remarks for this approval decision..."/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- ============================================================
+             Approval: Search View
+             ============================================================ -->
+        <record id="view_af_approval_search" model="ir.ui.view">
+            <field name="name">af.approval.search</field>
+            <field name="model">af.approval</field>
+            <field name="arch" type="xml">
+                <search string="Search Approvals">
+                    <field name="title"/>
+                    <field name="requested_by"/>
+                    <field name="assigned_to"/>
+                    <field name="asset_id"/>
+                    <field name="department_id"/>
+                    <separator/>
+                    <filter string="Pending" name="pending"
+                            domain="[('status', '=', 'pending')]"/>
+                    <filter string="Approved" name="approved"
+                            domain="[('status', '=', 'approved')]"/>
+                    <filter string="Rejected" name="rejected"
+                            domain="[('status', '=', 'rejected')]"/>
+                    <separator/>
+                    <filter string="Transfer" name="transfer"
+                            domain="[('approval_type', '=', 'transfer')]"/>
+                    <filter string="Booking" name="booking"
+                            domain="[('approval_type', '=', 'booking')]"/>
+                    <filter string="Maintenance" name="maintenance"
+                            domain="[('approval_type', '=', 'maintenance')]"/>
+                    <filter string="Audit" name="audit"
+                            domain="[('approval_type', '=', 'audit')]"/>
+                    <separator/>
+                    <filter string="Critical" name="critical"
+                            domain="[('priority', '=', 'critical')]"/>
+                    <filter string="High Priority" name="high"
+                            domain="[('priority', '=', 'high')]"/>
+                    <separator/>
+                    <filter string="My Requests" name="my_requests"
+                            domain="[('requested_by', '=', uid)]"/>
+                    <filter string="Assigned to Me" name="assigned_to_me"
+                            domain="[('assigned_to', '=', uid)]"/>
+                    <separator/>
+                    <group expand="0" string="Group By">
+                        <filter string="Type" name="group_type"
+                                context="{'group_by': 'approval_type'}"/>
+                        <filter string="Status" name="group_status"
+                                context="{'group_by': 'status'}"/>
+                        <filter string="Priority" name="group_priority"
+                                context="{'group_by': 'priority'}"/>
+                        <filter string="Department" name="group_department"
+                                context="{'group_by': 'department_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- ============================================================
+             Approval: Action
+             ============================================================ -->
+        <record id="action_af_approval" model="ir.actions.act_window">
+            <field name="name">Approvals</field>
+            <field name="res_model">af.approval</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_af_approval_search"/>
+            <field name="context">{'search_default_pending': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No pending approvals.
+                </p>
+                <p>Approval requests for transfers, bookings, and maintenance will appear here.</p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

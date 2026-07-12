@@ -1,0 +1,583 @@
+# ROLE
+
+You are a Senior Odoo 18 ERP Solution Architect with 15+ years of experience in enterprise ERP development.
+
+You are building a production-quality Odoo module for a hackathon.
+
+DO NOT generate prototype code.
+
+DO NOT generate placeholder implementations.
+
+DO NOT generate TODO comments.
+
+Every component must be production-ready, modular, scalable and follow Odoo Best Practices.
+
+Follow Odoo 18 Community Edition architecture.
+
+--------------------------------------------------
+
+# PROJECT
+
+Project Name:
+
+AssetFlow
+
+Enterprise Asset & Resource Management System
+
+--------------------------------------------------
+
+# PRIMARY GOAL
+
+Build ONLY PHASE 1.
+
+DO NOT implement future phases.
+
+Focus on creating a perfect ERP foundation.
+
+--------------------------------------------------
+
+# TECHNOLOGY
+
+Use
+
+Python
+
+Odoo ORM
+
+XML Views
+
+QWeb
+
+PostgreSQL
+
+Bootstrap (Odoo)
+
+OWL only where necessary
+
+--------------------------------------------------
+
+# CREATE COMPLETE MODULE STRUCTURE
+
+assetflow/
+
+__manifest__.py
+
+__init__.py
+
+models/
+
+views/
+
+security/
+
+data/
+
+wizard/
+
+controllers/
+
+reports/
+
+static/
+
+demo/
+
+README.md
+
+--------------------------------------------------
+
+# MANIFEST
+
+Configure
+
+Name
+
+Version
+
+Category
+
+License
+
+Dependencies
+
+Security
+
+Data Files
+
+Views
+
+Menu
+
+Demo Data
+
+Assets
+
+Everything must be properly registered.
+
+--------------------------------------------------
+
+# SECURITY
+
+Create
+
+ir.model.access.csv
+
+User Groups
+
+Admin
+
+Asset Manager
+
+Department Head
+
+Employee
+
+Configure proper access permissions.
+
+Employees must NEVER receive Admin permissions.
+
+Department Head cannot edit global configuration.
+
+Asset Manager manages assets only.
+
+--------------------------------------------------
+
+# AUTHENTICATION
+
+Use standard Odoo authentication.
+
+Do NOT build a custom login page.
+
+Configure Role Based Access Control.
+
+--------------------------------------------------
+
+# DATABASE MODELS
+
+Create complete models with relationships.
+
+--------------------------------------------------
+
+Department
+
+Fields
+
+Name
+
+Department Code
+
+Department Head
+
+Parent Department
+
+Description
+
+Status
+
+Employee Count (Computed)
+
+Asset Count (Computed)
+
+--------------------------------------------------
+
+Employee
+
+Fields
+
+Employee ID
+
+Name
+
+Email
+
+Phone
+
+Department
+
+Role
+
+Status
+
+Joining Date
+
+Profile Image
+
+Notes
+
+--------------------------------------------------
+
+Asset Category
+
+Fields
+
+Category Name
+
+Category Code
+
+Description
+
+Warranty Period
+
+Status
+
+--------------------------------------------------
+
+Asset
+
+Fields
+
+Asset Name
+
+Asset Tag
+
+(Auto Generated)
+
+Serial Number
+
+Category
+
+Department
+
+Assigned Employee
+
+Purchase Date
+
+Purchase Cost
+
+Current Value
+
+Vendor
+
+Condition
+
+Excellent
+
+Good
+
+Fair
+
+Poor
+
+Status
+
+Available
+
+Allocated
+
+Reserved
+
+Under Maintenance
+
+Lost
+
+Retired
+
+Disposed
+
+Bookable
+
+Boolean
+
+Photo
+
+Documents
+
+Location
+
+QR Code
+
+Generated Automatically
+
+Description
+
+--------------------------------------------------
+
+# BUSINESS RULES
+
+Asset Tag
+
+Automatically generate
+
+AF-000001
+
+AF-000002
+
+AF-000003
+
+Never duplicate.
+
+Department deletion
+
+Prevent deletion if employees exist.
+
+Category deletion
+
+Prevent deletion if assets exist.
+
+Asset deletion
+
+Soft delete only.
+
+Never permanently remove assets.
+
+Employee
+
+Cannot belong to inactive department.
+
+--------------------------------------------------
+
+# MENUS
+
+AssetFlow
+
+Dashboard
+
+Organization
+
+Departments
+
+Employees
+
+Categories
+
+Assets
+
+Configuration
+
+User Roles
+
+Settings
+
+Professional icons.
+
+Proper menu hierarchy.
+
+--------------------------------------------------
+
+# XML VIEWS
+
+For every model create
+
+Tree View
+
+Form View
+
+Search View
+
+Kanban View
+
+Enable
+
+Sorting
+
+Grouping
+
+Filters
+
+Search Panels
+
+Status Badges
+
+Color Coding
+
+--------------------------------------------------
+
+# DASHBOARD
+
+Create dashboard cards.
+
+Total Assets
+
+Available
+
+Allocated
+
+Maintenance
+
+Departments
+
+Employees
+
+Display KPI cards using Odoo dashboard components.
+
+--------------------------------------------------
+
+# SMART SEARCH
+
+Assets searchable by
+
+Asset Tag
+
+Serial Number
+
+Category
+
+Department
+
+Employee
+
+Status
+
+Location
+
+--------------------------------------------------
+
+# COMPUTED FIELDS
+
+Department
+
+Employee Count
+
+Asset Count
+
+Asset
+
+Current Age
+
+Warranty Remaining
+
+Employee
+
+Allocated Asset Count
+
+--------------------------------------------------
+
+# VALIDATIONS
+
+Purchase Cost
+
+Cannot be negative.
+
+Current Value
+
+Cannot exceed purchase cost.
+
+Purchase Date
+
+Cannot be future.
+
+Email validation.
+
+Unique Department Code.
+
+Unique Category Code.
+
+Unique Asset Tag.
+
+Unique Serial Number.
+
+--------------------------------------------------
+
+# UI
+
+Modern ERP interface.
+
+Professional spacing.
+
+Responsive.
+
+No visual clutter.
+
+Consistent colors.
+
+Professional icons.
+
+--------------------------------------------------
+
+# SAMPLE DATA
+
+Generate demo data.
+
+5 Departments
+
+20 Employees
+
+6 Categories
+
+40 Assets
+
+Random realistic values.
+
+--------------------------------------------------
+
+# README
+
+Generate complete README including
+
+Installation
+
+Features
+
+Architecture
+
+Folder Structure
+
+Database Models
+
+Screenshots Placeholder
+
+Future Scope
+
+--------------------------------------------------
+
+# CODING STANDARDS
+
+Use proper inheritance.
+
+Reusable methods.
+
+Comments only where necessary.
+
+No duplicated code.
+
+Follow PEP8.
+
+Use Odoo naming conventions.
+
+--------------------------------------------------
+
+# IMPORTANT
+
+This is ONLY Phase 1.
+
+DO NOT build
+
+Allocation
+
+Booking
+
+Transfer
+
+Maintenance Workflow
+
+Notifications
+
+Reports
+
+Analytics
+
+Audits
+
+These belong to later phases.
+
+--------------------------------------------------
+
+# OUTPUT
+
+Generate the COMPLETE project.
+
+Create every file.
+
+Register every model.
+
+Register every XML.
+
+Register security.
+
+Generate demo data.
+
+The project must run immediately after installation without manual fixes.
+
+Do not stop midway.
+
+Complete the entire Phase 1 before finishing.

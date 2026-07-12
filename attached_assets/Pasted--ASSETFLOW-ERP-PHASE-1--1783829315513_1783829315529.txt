@@ -1,0 +1,688 @@
+# =====================================================================
+# ASSETFLOW ERP
+# PHASE 1.5
+# ENTERPRISE ARCHITECTURE FREEZE
+# =====================================================================
+
+ROLE
+
+You are a Principal Software Architect, Senior Odoo 18 Architect,
+Senior Python Engineer,
+Enterprise Solution Architect,
+and Code Quality Reviewer.
+
+You are NOT creating new functionality.
+
+You are performing a COMPLETE architectural review of the existing AssetFlow project.
+
+The project already contains Phase 1.
+
+Your responsibility is to transform the existing codebase into an enterprise-grade project before future development begins.
+
+DO NOT remove working functionality.
+
+DO NOT rewrite the application.
+
+DO NOT create duplicate modules.
+
+ONLY improve, organize, validate and stabilize the project.
+
+Think like a Senior Architect performing a production readiness review.
+
+=====================================================================
+
+PROJECT INFORMATION
+
+Project
+
+AssetFlow
+
+Enterprise Asset & Resource Management System
+
+Platform
+
+Odoo 18 Community Edition
+
+Language
+
+Python
+
+Database
+
+PostgreSQL
+
+Architecture
+
+MVC
+
+=====================================================================
+
+PRIMARY GOAL
+
+Freeze the architecture.
+
+Refactor where necessary.
+
+Ensure future phases can be developed without breaking the application.
+
+This prompt should NOT introduce new business features.
+
+=====================================================================
+
+PROJECT STRUCTURE
+
+Strictly maintain this architecture.
+
+AssetFlow/
+
+│
+
+├── backend/
+
+│ ├── odoo/
+
+│ │ ├── custom_addons/
+
+│ │ │ └── assetflow/
+
+│ │ │ ├── models/
+
+│ │ │ ├── views/
+
+│ │ │ ├── controllers/
+
+│ │ │ ├── security/
+
+│ │ │ ├── wizard/
+
+│ │ │ ├── reports/
+
+│ │ │ ├── services/
+
+│ │ │ ├── data/
+
+│ │ │ ├── demo/
+
+│ │ │ ├── static/
+
+│ │ │ ├── __manifest__.py
+
+│ │ │ └── __init__.py
+
+│ │
+
+│ ├── config/
+
+│
+
+│ ├── scripts/
+
+│
+
+│ ├── tests/
+
+│
+
+│ └── requirements.txt
+
+│
+
+├── frontend/
+
+│ ├── src/
+
+│ │ ├── pages/
+
+│ │ ├── components/
+
+│ │ ├── layouts/
+
+│ │ ├── assets/
+
+│ │ ├── api/
+
+│ │ ├── utils/
+
+│ │ ├── hooks/
+
+│ │ └── styles/
+
+│ │
+
+│ └── public/
+
+│
+
+├── docs/
+
+├── database/
+
+├── screenshots/
+
+├── presentation/
+
+├── README.md
+
+├── docker-compose.yml
+
+└── .gitignore
+
+Never violate this structure.
+
+Never place backend code inside frontend.
+
+Never place frontend assets inside backend.
+
+=====================================================================
+
+PROJECT CONSTITUTION
+
+This constitution applies to EVERY future phase.
+
+Review the existing code and enforce every rule.
+
+RULE 1
+
+Never overwrite working functionality.
+
+RULE 2
+
+Never duplicate logic.
+
+RULE 3
+
+Always extend existing models.
+
+RULE 4
+
+Follow SOLID Principles.
+
+RULE 5
+
+Use reusable helper methods.
+
+RULE 6
+
+Separate Business Logic from UI.
+
+RULE 7
+
+Keep Controllers thin.
+
+RULE 8
+
+Keep Models responsible only for ORM logic.
+
+RULE 9
+
+Move reusable logic into Services.
+
+RULE 10
+
+No hardcoded values.
+
+RULE 11
+
+No duplicated XML.
+
+RULE 12
+
+No duplicated menu definitions.
+
+RULE 13
+
+No duplicate security groups.
+
+RULE 14
+
+Follow Odoo Best Practices.
+
+RULE 15
+
+Maintain clean naming conventions.
+
+=====================================================================
+
+ARCHITECTURE REVIEW
+
+Perform a complete audit.
+
+Review
+
+Folder Structure
+
+Python Imports
+
+Manifest
+
+XML Registration
+
+Menus
+
+Actions
+
+Window Actions
+
+Security
+
+Dependencies
+
+Views
+
+Models
+
+Data Files
+
+Demo Files
+
+Controllers
+
+Services
+
+README
+
+Fix any inconsistencies.
+
+=====================================================================
+
+CODE QUALITY REVIEW
+
+Review every file.
+
+Look for
+
+Dead Code
+
+Unused Imports
+
+Duplicate Imports
+
+Duplicate Classes
+
+Duplicate Methods
+
+Duplicate XML IDs
+
+Incorrect Naming
+
+Long Methods
+
+Repeated Code
+
+Refactor only when safe.
+
+Do NOT change application behavior.
+
+=====================================================================
+
+PYTHON REVIEW
+
+Verify
+
+PEP8
+
+Typing
+
+Model Naming
+
+Inheritance
+
+ORM Usage
+
+Computed Fields
+
+Decorators
+
+API usage
+
+Exception Handling
+
+Logging
+
+Refactor where necessary.
+
+=====================================================================
+
+ODOO REVIEW
+
+Review
+
+Manifest
+
+Dependencies
+
+Security
+
+Record Rules
+
+Access Rights
+
+XML IDs
+
+Model Registration
+
+View Registration
+
+Menu Registration
+
+Window Actions
+
+Server Actions
+
+Cron Definitions
+
+Demo Data
+
+Data Loading Order
+
+Everything must load correctly.
+
+=====================================================================
+
+SECURITY REVIEW
+
+Verify
+
+User Groups
+
+Access Rights
+
+Record Rules
+
+Employee Permissions
+
+Manager Permissions
+
+Admin Permissions
+
+Ensure
+
+No privilege escalation.
+
+No unauthorized access.
+
+=====================================================================
+
+DATABASE REVIEW
+
+Review
+
+Relationships
+
+Many2One
+
+One2Many
+
+Many2Many
+
+Indexes
+
+Unique Constraints
+
+Required Fields
+
+Computed Fields
+
+Stored Fields
+
+Related Fields
+
+Ensure normalization.
+
+Remove redundant data.
+
+=====================================================================
+
+XML REVIEW
+
+Review
+
+Tree Views
+
+Form Views
+
+Search Views
+
+Kanban Views
+
+Actions
+
+Menus
+
+Buttons
+
+Statusbars
+
+Widgets
+
+Filters
+
+Grouping
+
+Ensure
+
+Consistent layout.
+
+Professional spacing.
+
+Responsive rendering.
+
+No duplicate XML IDs.
+
+=====================================================================
+
+USER INTERFACE REVIEW
+
+Standardize
+
+Icons
+
+Buttons
+
+Header Layout
+
+Breadcrumbs
+
+Spacing
+
+Colors
+
+Status Badges
+
+Field Alignment
+
+Notebook Tabs
+
+Stat Buttons
+
+Consistency across every screen.
+
+=====================================================================
+
+PERFORMANCE REVIEW
+
+Optimize
+
+ORM Queries
+
+Searches
+
+Read Operations
+
+Write Operations
+
+Computed Fields
+
+Prefetching
+
+Database Calls
+
+Avoid unnecessary loops.
+
+Reuse existing methods.
+
+=====================================================================
+
+ERROR HANDLING
+
+Ensure
+
+Friendly Validation Errors
+
+Meaningful Messages
+
+Graceful Failure
+
+No stack traces shown to users.
+
+=====================================================================
+
+LOGGING
+
+Introduce structured logging.
+
+Log
+
+Errors
+
+Warnings
+
+Critical Operations
+
+Avoid excessive logging.
+
+=====================================================================
+
+CONFIGURATION
+
+Move configurable values into
+
+Settings
+
+Constants
+
+Configuration Models
+
+Never hardcode values.
+
+=====================================================================
+
+TEST REVIEW
+
+Review existing tests.
+
+Create missing tests where appropriate.
+
+Verify
+
+Installation
+
+Module Upgrade
+
+Basic CRUD
+
+Dashboard Loading
+
+Views
+
+Menus
+
+Security
+
+=====================================================================
+
+DOCUMENTATION REVIEW
+
+Update README.
+
+Include
+
+Architecture
+
+Folder Structure
+
+Installation
+
+Configuration
+
+Development Workflow
+
+Naming Standards
+
+Coding Standards
+
+Future Roadmap
+
+=====================================================================
+
+PREPARE FOR PHASE 2
+
+Ensure the project is ready for
+
+Asset Allocation
+
+Transfers
+
+Maintenance
+
+Booking
+
+Notifications
+
+without requiring structural changes.
+
+Future modules should plug into the existing architecture.
+
+=====================================================================
+
+STRICTLY DO NOT IMPLEMENT
+
+Allocation
+
+Transfer
+
+Maintenance Workflow
+
+Booking Workflow
+
+Reports
+
+Analytics
+
+Notifications
+
+QR
+
+Audit
+
+AI
+
+Department Ranking
+
+Asset Health Score
+
+These belong to later phases.
+
+=====================================================================
+
+FINAL DELIVERABLE
+
+Perform a complete enterprise architecture audit.
+
+Refactor only where necessary.
+
+Keep all existing functionality intact.
+
+Produce a clean,
+
+stable,
+
+modular,
+
+maintainable,
+
+production-quality Odoo project.
+
+The codebase must be ready for enterprise-scale feature development.
+
+Do not stop until the entire review has been completed.

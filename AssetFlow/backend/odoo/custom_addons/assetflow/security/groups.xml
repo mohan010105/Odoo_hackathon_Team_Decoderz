@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- ============================================================
+             AssetFlow Security Categories
+             ============================================================ -->
+        <record id="module_category_assetflow" model="ir.module.category">
+            <field name="name">AssetFlow</field>
+            <field name="description">Enterprise Asset and Resource Management</field>
+            <field name="sequence">10</field>
+        </record>
+
+        <!-- ============================================================
+             Group: AssetFlow Employee
+             Read-only access to assets assigned to them.
+             ============================================================ -->
+        <record id="group_assetflow_employee" model="res.groups">
+            <field name="name">Employee</field>
+            <field name="category_id" ref="module_category_assetflow"/>
+            <field name="comment">Can view their own assigned assets and personal details.</field>
+        </record>
+
+        <!-- ============================================================
+             Group: AssetFlow Asset Manager
+             Full CRUD on assets; read on departments/employees.
+             ============================================================ -->
+        <record id="group_assetflow_manager" model="res.groups">
+            <field name="name">Asset Manager</field>
+            <field name="category_id" ref="module_category_assetflow"/>
+            <field name="implied_ids" eval="[(4, ref('group_assetflow_employee'))]"/>
+            <field name="comment">Can manage all assets, categories, and view organisational data.</field>
+        </record>
+
+        <!-- ============================================================
+             Group: AssetFlow Admin
+             Unrestricted access to all AssetFlow records.
+             ============================================================ -->
+        <record id="group_assetflow_admin" model="res.groups">
+            <field name="name">Administrator</field>
+            <field name="category_id" ref="module_category_assetflow"/>
+            <field name="implied_ids" eval="[(4, ref('group_assetflow_manager'))]"/>
+            <field name="comment">Full administrative access to AssetFlow including departments and employees.</field>
+        </record>
+
+    </data>
+</odoo>

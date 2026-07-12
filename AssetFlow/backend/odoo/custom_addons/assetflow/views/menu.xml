@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- ============================================================
+             Root Menu
+             ============================================================ -->
+        <menuitem
+            id="menu_assetflow_root"
+            name="AssetFlow"
+            sequence="10"
+            web_icon="assetflow,static/src/img/menu_icon.png"
+            groups="assetflow.group_assetflow_employee"/>
+
+        <!-- ============================================================
+             Dashboard
+             ============================================================ -->
+        <menuitem
+            id="menu_assetflow_dashboard"
+            name="Dashboard"
+            parent="menu_assetflow_root"
+            action="action_assetflow_dashboard"
+            sequence="10"
+            groups="assetflow.group_assetflow_employee"/>
+
+        <!-- ============================================================
+             Activity Center
+             ============================================================ -->
+        <menuitem
+            id="menu_assetflow_activity_root"
+            name="Activity Center"
+            parent="menu_assetflow_root"
+            sequence="15"
+            groups="assetflow.group_assetflow_employee"/>
+
+        <menuitem
+            id="menu_assetflow_activity_timeline"
+            name="Activity Timeline"
+            parent="menu_assetflow_activity_root"
+            action="action_af_activity"
+            sequence="10"
+            groups="assetflow.group_assetflow_employee"/>
+
+        <menuitem
+            id="menu_assetflow_notifications"
+            name="Notifications"
+            parent="menu_assetflow_activity_root"
+            action="action_af_notification"
+            sequence="20"
+            groups="assetflow.group_assetflow_employee"/>
+
+        <menuitem
+            id="menu_assetflow_approvals"
+            name="Approvals"
+            parent="menu_assetflow_activity_root"
+            action="action_af_approval"
+            sequence="30"
+            groups="assetflow.group_assetflow_employee"/>
+
+        <menuitem
+            id="menu_assetflow_system_alerts"
+            name="System Alerts"
+            parent="menu_assetflow_activity_root"
+            action="action_af_system_alert"
+            sequence="40"
+            groups="assetflow.group_assetflow_employee"/>
+
+        <!-- ============================================================
+             Assets
+             ============================================================ -->
+        <menuitem
+            id="menu_assetflow_assets_root"
+            name="Assets"
+            parent="menu_assetflow_root"
+            sequence="20"
+            groups="assetflow.group_assetflow_employee"/>
+
+        <menuitem
+            id="menu_assetflow_assets"
+            name="All Assets"
+            parent="menu_assetflow_assets_root"
+            action="action_af_asset"
+            sequence="10"
+            groups="assetflow.group_assetflow_employee"/>
+
+        <menuitem
+            id="menu_assetflow_allocations"
+            name="Allocations"
+            parent="menu_assetflow_assets_root"
+            action="action_af_asset_allocation"
+            sequence="15"
+            groups="assetflow.group_assetflow_employee"/>
+
+        <menuitem
+            id="menu_assetflow_transfers"
+            name="Transfer Requests"
+            parent="menu_assetflow_assets_root"
+            action="action_af_transfer_request"
+            sequence="18"
+            groups="assetflow.group_assetflow_employee"/>
+
+        <menuitem
+            id="menu_assetflow_allocation_history"
+            name="Allocation History"
+            parent="menu_assetflow_assets_root"
+            action="action_af_allocation_history"
+            sequence="25"
+            groups="assetflow.group_assetflow_manager"/>
+
+        <menuitem
+            id="menu_assetflow_asset_categories"
+            name="Categories"
+            parent="menu_assetflow_assets_root"
+            action="action_af_asset_category"
+            sequence="30"
+            groups="assetflow.group_assetflow_manager"/>
+
+        <!-- ============================================================
+             Organisation
+             ============================================================ -->
+        <menuitem
+            id="menu_assetflow_org_root"
+            name="Organisation"
+            parent="menu_assetflow_root"
+            sequence="30"
+            groups="assetflow.group_assetflow_manager"/>
+
+        <menuitem
+            id="menu_assetflow_departments"
+            name="Departments"
+            parent="menu_assetflow_org_root"
+            action="action_af_department"
+            sequence="10"
+            groups="assetflow.group_assetflow_manager"/>
+
+        <menuitem
+            id="menu_assetflow_employees"
+            name="Employees"
+            parent="menu_assetflow_org_root"
+            action="action_af_employee"
+            sequence="20"
+            groups="assetflow.group_assetflow_manager"/>
+
+    </data>
+</odoo>

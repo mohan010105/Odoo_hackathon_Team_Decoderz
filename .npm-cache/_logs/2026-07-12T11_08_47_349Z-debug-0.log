@@ -1,0 +1,44 @@
+0 verbose cli C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\npm\bin\npm-cli.js
+1 info using npm@11.11.1
+2 info using node@v25.8.2
+3 silly config load:file:C:\Program Files\nodejs\node_modules\npm\npmrc
+4 info config found workspace root at D:\Projects\Odoo-Architect
+5 silly config load:file:D:\Projects\Odoo-Architect\.npmrc
+6 silly config load:file:C:\Users\Admin\.npmrc
+7 silly config load:file:C:\Users\Admin\AppData\Local\pnpm\config\rc
+8 verbose title npm run start
+9 verbose argv "run" "start"
+10 verbose logfile logs-max:10 dir:d:\Projects\Odoo-Architect\.npm-cache\_logs\2026-07-12T11_08_47_349Z-
+11 verbose logfile d:\Projects\Odoo-Architect\.npm-cache\_logs\2026-07-12T11_08_47_349Z-debug-0.log
+12 warn Unknown env config "catalog". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.
+13 warn Unknown env config "minimum-release-age". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.
+14 warn Unknown env config "npm-globalconfig". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.
+15 warn Unknown env config "overrides". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.
+16 warn Unknown env config "verify-deps-before-run". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.
+17 warn Unknown env config "_jsr-registry". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options.
+18 silly logfile start cleaning logs, removing 1 files
+19 silly logfile done cleaning log files
+20 verbose stack Error: command failed
+20 verbose stack     at promiseSpawn (C:\Program Files\nodejs\node_modules\npm\node_modules\@npmcli\promise-spawn\lib\index.js:22:22)
+20 verbose stack     at spawnWithShell (C:\Program Files\nodejs\node_modules\npm\node_modules\@npmcli\promise-spawn\lib\index.js:124:10)
+20 verbose stack     at promiseSpawn (C:\Program Files\nodejs\node_modules\npm\node_modules\@npmcli\promise-spawn\lib\index.js:12:12)
+20 verbose stack     at runScriptPkg (C:\Program Files\nodejs\node_modules\npm\node_modules\@npmcli\run-script\lib\run-script-pkg.js:79:13)
+20 verbose stack     at runScript (C:\Program Files\nodejs\node_modules\npm\node_modules\@npmcli\run-script\lib\run-script.js:9:12)
+20 verbose stack     at #run (C:\Program Files\nodejs\node_modules\npm\lib\commands\run.js:136:13)
+20 verbose stack     at RunScript.execWorkspaces (C:\Program Files\nodejs\node_modules\npm\lib\commands\run.js:67:24)
+20 verbose stack     at async Npm.exec (C:\Program Files\nodejs\node_modules\npm\lib\npm.js:193:9)
+20 verbose stack     at async module.exports (C:\Program Files\nodejs\node_modules\npm\lib\cli\entry.js:67:5)
+21 verbose pkgid @workspace/api-server@0.0.0
+22 error Lifecycle script `start` failed with error:
+23 error code 1
+24 error path D:\Projects\Odoo-Architect\artifacts\api-server
+25 error workspace @workspace/api-server@0.0.0
+26 error location D:\Projects\Odoo-Architect\artifacts\api-server
+27 error command failed
+28 error command C:\WINDOWS\system32\cmd.exe /d /s /c node --env-file=.env --enable-source-maps ./dist/index.mjs
+29 verbose cwd D:\Projects\Odoo-Architect\artifacts\api-server
+30 verbose os Windows_NT 10.0.26100
+31 verbose node v25.8.2
+32 verbose npm  v11.11.1
+33 verbose exit 1
+34 verbose code 1

@@ -3,20 +3,38 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: AssetFlow - Enterprise Asset & Resource Management API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: dashboard
+    description: Dashboard KPI aggregates
+  - name: departments
+    description: Department management
+  - name: employees
+    description: Employee management
+  - name: asset-categories
+    description: Asset category management
+  - name: assets
+    description: Asset management
+  - name: bookings
+    description: Resource booking management
+  - name: maintenances
+    description: Maintenance request management
+  - name: notifications
+    description: System notification management
+  - name: activity-logs
+    description: System activity logs
+
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +42,1443 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /dashboard:
+    get:
+      operationId: getDashboard
+      tags: [dashboard]
+      summary: Get dashboard KPI summary
+      responses:
+        "200":
+          description: Dashboard stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardStats"
+
+  /departments:
+    get:
+      operationId: listDepartments
+      tags: [departments]
+      summary: List all departments
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [active, inactive]
+      responses:
+        "200":
+          description: List of departments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Department"
+    post:
+      operationId: createDepartment
+      tags: [departments]
+      summary: Create a department
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DepartmentInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Department"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /departments/{id}:
+    get:
+      operationId: getDepartment
+      tags: [departments]
+      summary: Get a department by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Department
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Department"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    patch:
+      operationId: updateDepartment
+      tags: [departments]
+      summary: Update a department
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DepartmentUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Department"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      operationId: deleteDepartment
+      tags: [departments]
+      summary: Delete a department (blocked if employees exist)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+        "400":
+          description: Cannot delete - employees exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /employees:
+    get:
+      operationId: listEmployees
+      tags: [employees]
+      summary: List all employees
+      parameters:
+        - name: departmentId
+          in: query
+          schema:
+            type: integer
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [active, inactive, on_leave]
+        - name: role
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of employees
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Employee"
+    post:
+      operationId: createEmployee
+      tags: [employees]
+      summary: Create an employee
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmployeeInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Employee"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /employees/{id}:
+    get:
+      operationId: getEmployee
+      tags: [employees]
+      summary: Get an employee by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Employee
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Employee"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    patch:
+      operationId: updateEmployee
+      tags: [employees]
+      summary: Update an employee
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EmployeeUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Employee"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      operationId: deleteEmployee
+      tags: [employees]
+      summary: Delete an employee
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /asset-categories:
+    get:
+      operationId: listAssetCategories
+      tags: [asset-categories]
+      summary: List all asset categories
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [active, inactive]
+      responses:
+        "200":
+          description: List of asset categories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AssetCategory"
+    post:
+      operationId: createAssetCategory
+      tags: [asset-categories]
+      summary: Create an asset category
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AssetCategoryInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssetCategory"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /asset-categories/{id}:
+    get:
+      operationId: getAssetCategory
+      tags: [asset-categories]
+      summary: Get an asset category by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: AssetCategory
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssetCategory"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    patch:
+      operationId: updateAssetCategory
+      tags: [asset-categories]
+      summary: Update an asset category
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AssetCategoryUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssetCategory"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      operationId: deleteAssetCategory
+      tags: [asset-categories]
+      summary: Delete an asset category (blocked if assets exist)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+        "400":
+          description: Cannot delete - assets exist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /assets:
+    get:
+      operationId: listAssets
+      tags: [assets]
+      summary: List all assets (excludes soft-deleted)
+      parameters:
+        - name: categoryId
+          in: query
+          schema:
+            type: integer
+        - name: departmentId
+          in: query
+          schema:
+            type: integer
+        - name: employeeId
+          in: query
+          schema:
+            type: integer
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [available, allocated, reserved, under_maintenance, lost, retired, disposed]
+        - name: condition
+          in: query
+          schema:
+            type: string
+            enum: [excellent, good, fair, poor]
+        - name: bookable
+          in: query
+          schema:
+            type: boolean
+        - name: search
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of assets
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Asset"
+    post:
+      operationId: createAsset
+      tags: [assets]
+      summary: Create an asset (tag auto-generated)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AssetInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Asset"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /assets/{id}:
+    get:
+      operationId: getAsset
+      tags: [assets]
+      summary: Get an asset by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Asset
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Asset"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    patch:
+      operationId: updateAsset
+      tags: [assets]
+      summary: Update an asset
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AssetUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Asset"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      operationId: deleteAsset
+      tags: [assets]
+      summary: Soft-delete an asset (sets status to disposed, never permanently removes)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Soft-deleted asset
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Asset"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /allocations:
+    get:
+      operationId: listAllocations
+      tags: [allocations]
+      summary: List all asset allocations
+      parameters:
+        - name: assetId
+          in: query
+          schema:
+            type: integer
+        - name: employeeId
+          in: query
+          schema:
+            type: integer
+        - name: departmentId
+          in: query
+          schema:
+            type: integer
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [draft, allocated, returned, cancelled]
+      responses:
+        "200":
+          description: List of allocations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AssetAllocation"
+    post:
+      operationId: createAllocation
+      tags: [allocations]
+      summary: Create an asset allocation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AssetAllocationInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssetAllocation"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /allocations/{id}:
+    get:
+      operationId: getAllocation
+      tags: [allocations]
+      summary: Get an allocation by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: AssetAllocation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssetAllocation"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    patch:
+      operationId: updateAllocation
+      tags: [allocations]
+      summary: Update an allocation
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AssetAllocationUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssetAllocation"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /allocations/{id}/return:
+    post:
+      operationId: returnAllocation
+      tags: [allocations]
+      summary: Return an allocated asset
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReturnAllocationInput"
+      responses:
+        "200":
+          description: Asset returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AssetAllocation"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /transfers:
+    get:
+      operationId: listTransfers
+      tags: [transfers]
+      summary: List all transfer requests
+      parameters:
+        - name: assetId
+          in: query
+          schema:
+            type: integer
+        - name: requestedEmployeeId
+          in: query
+          schema:
+            type: integer
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [pending, approved, rejected, completed, cancelled]
+      responses:
+        "200":
+          description: List of transfer requests
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TransferRequest"
+    post:
+      operationId: createTransfer
+      tags: [transfers]
+      summary: Create a transfer request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TransferRequestInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TransferRequest"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /transfers/{id}:
+    get:
+      operationId: getTransfer
+      tags: [transfers]
+      summary: Get a transfer request by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: TransferRequest
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TransferRequest"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    patch:
+      operationId: updateTransfer
+      tags: [transfers]
+      summary: Update a transfer request
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TransferRequestUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TransferRequest"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /transfers/{id}/approve:
+    post:
+      operationId: approveTransfer
+      tags: [transfers]
+      summary: Approve a transfer request
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApproveTransferInput"
+      responses:
+        "200":
+          description: Transfer approved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TransferRequest"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /transfers/{id}/reject:
+    post:
+      operationId: rejectTransfer
+      tags: [transfers]
+      summary: Reject a transfer request
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RejectTransferInput"
+      responses:
+        "200":
+          description: Transfer rejected
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TransferRequest"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /transfers/{id}/complete:
+    post:
+      operationId: completeTransfer
+      tags: [transfers]
+      summary: Complete a transfer request
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CompleteTransferInput"
+      responses:
+        "200":
+          description: Transfer completed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TransferRequest"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /transfers/{id}/cancel:
+    post:
+      operationId: cancelTransfer
+      tags: [transfers]
+      summary: Cancel a transfer request
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CancelTransferInput"
+      responses:
+        "200":
+          description: Transfer cancelled
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TransferRequest"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /allocation-history:
+    get:
+      operationId: listAllocationHistory
+      tags: [allocations]
+      summary: List all allocation histories
+      parameters:
+        - name: assetId
+          in: query
+          schema:
+            type: integer
+        - name: employeeId
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of allocation histories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AllocationHistory"
+
+  /bookings:
+    get:
+      operationId: listBookings
+      tags: [bookings]
+      summary: List all bookings
+      parameters:
+        - name: resourceId
+          in: query
+          schema:
+            type: integer
+        - name: employeeId
+          in: query
+          schema:
+            type: integer
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [requested, approved, rejected, active, completed, cancelled]
+      responses:
+        "200":
+          description: List of bookings
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Booking"
+    post:
+      operationId: createBooking
+      tags: [bookings]
+      summary: Create a booking
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BookingInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Booking"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /bookings/{id}:
+    get:
+      operationId: getBooking
+      tags: [bookings]
+      summary: Get a booking by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Booking
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Booking"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    patch:
+      operationId: updateBooking
+      tags: [bookings]
+      summary: Update a booking (reschedule)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BookingUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Booking"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /bookings/{id}/approve:
+    post:
+      operationId: approveBooking
+      tags: [bookings]
+      summary: Approve a booking request
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Booking approved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Booking"
+
+  /bookings/{id}/reject:
+    post:
+      operationId: rejectBooking
+      tags: [bookings]
+      summary: Reject a booking request
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                notes:
+                  type: string
+      responses:
+        "200":
+          description: Booking rejected
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Booking"
+
+  /bookings/{id}/cancel:
+    post:
+      operationId: cancelBooking
+      tags: [bookings]
+      summary: Cancel a booking
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Booking cancelled
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Booking"
+
+  /maintenances:
+    get:
+      operationId: listMaintenances
+      tags: [maintenances]
+      summary: List all maintenance requests
+      parameters:
+        - name: assetId
+          in: query
+          schema:
+            type: integer
+        - name: technicianId
+          in: query
+          schema:
+            type: integer
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [raised, approved, assigned, in_progress, resolved, closed]
+        - name: priority
+          in: query
+          schema:
+            type: string
+            enum: [low, medium, high, critical]
+      responses:
+        "200":
+          description: List of maintenance requests
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Maintenance"
+    post:
+      operationId: createMaintenance
+      tags: [maintenances]
+      summary: Create a maintenance request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MaintenanceInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Maintenance"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /maintenances/{id}:
+    get:
+      operationId: getMaintenance
+      tags: [maintenances]
+      summary: Get a maintenance request by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Maintenance request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Maintenance"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    patch:
+      operationId: updateMaintenance
+      tags: [maintenances]
+      summary: Update a maintenance request
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MaintenanceUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Maintenance"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /maintenances/{id}/approve:
+    post:
+      operationId: approveMaintenance
+      tags: [maintenances]
+      summary: Approve a maintenance request
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Maintenance approved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Maintenance"
+
+  /maintenances/{id}/assign:
+    post:
+      operationId: assignMaintenance
+      tags: [maintenances]
+      summary: Assign technician to maintenance request
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                technicianId:
+                  type: integer
+              required: [technicianId]
+      responses:
+        "200":
+          description: Technician assigned
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Maintenance"
+
+  /maintenances/{id}/resolve:
+    post:
+      operationId: resolveMaintenance
+      tags: [maintenances]
+      summary: Mark maintenance as resolved
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                resolutionNotes:
+                  type: string
+                actualCost:
+                  type: number
+              required: [resolutionNotes]
+      responses:
+        "200":
+          description: Maintenance resolved
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Maintenance"
+
+  /maintenances/{id}/close:
+    post:
+      operationId: closeMaintenance
+      tags: [maintenances]
+      summary: Close maintenance request
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Maintenance closed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Maintenance"
+
+  /notifications:
+    get:
+      operationId: listNotifications
+      tags: [notifications]
+      summary: List all notifications
+      responses:
+        "200":
+          description: List of notifications
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Notification"
+
+  /notifications/read-all:
+    post:
+      operationId: readAllNotifications
+      tags: [notifications]
+      summary: Mark all notifications as read
+      responses:
+        "200":
+          description: All read
+
+  /notifications/{id}/read:
+    patch:
+      operationId: readNotification
+      tags: [notifications]
+      summary: Mark a notification as read
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Notification updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Notification"
+
+  /activity-logs:
+    get:
+      operationId: listActivityLogs
+      tags: [activity-logs]
+      summary: List all activity logs
+      responses:
+        "200":
+          description: List of activity logs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ActivityLog"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +1489,962 @@ components:
       required:
         - status
 
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
+
+    DashboardStats:
+      type: object
+      properties:
+        totalAssets:
+          type: integer
+        availableAssets:
+          type: integer
+        allocatedAssets:
+          type: integer
+        maintenanceAssets:
+          type: integer
+        totalDepartments:
+          type: integer
+        totalEmployees:
+          type: integer
+        totalCategories:
+          type: integer
+        returnedAssets:
+          type: integer
+        pendingTransfers:
+          type: integer
+        assetsByStatus:
+          type: array
+          items:
+            $ref: "#/components/schemas/StatusCount"
+        assetsByCategory:
+          type: array
+          items:
+            $ref: "#/components/schemas/CategoryCount"
+        assetsByCondition:
+          type: array
+          items:
+            $ref: "#/components/schemas/ConditionCount"
+      required:
+        - totalAssets
+        - availableAssets
+        - allocatedAssets
+        - maintenanceAssets
+        - totalDepartments
+        - totalEmployees
+        - totalCategories
+        - returnedAssets
+        - pendingTransfers
+        - assetsByStatus
+        - assetsByCategory
+        - assetsByCondition
+
+
+    StatusCount:
+      type: object
+      properties:
+        status:
+          type: string
+        count:
+          type: integer
+      required:
+        - status
+        - count
+
+    CategoryCount:
+      type: object
+      properties:
+        categoryName:
+          type: string
+        count:
+          type: integer
+      required:
+        - categoryName
+        - count
+
+    ConditionCount:
+      type: object
+      properties:
+        condition:
+          type: string
+        count:
+          type: integer
+      required:
+        - condition
+        - count
+
+    Department:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        code:
+          type: string
+        headId:
+          type: ["integer", "null"]
+        headName:
+          type: ["string", "null"]
+        parentId:
+          type: ["integer", "null"]
+        parentName:
+          type: ["string", "null"]
+        description:
+          type: ["string", "null"]
+        status:
+          type: string
+          enum: [active, inactive]
+        employeeCount:
+          type: integer
+        assetCount:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - name
+        - code
+        - status
+        - employeeCount
+        - assetCount
+        - createdAt
+
+    DepartmentInput:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        code:
+          type: string
+          minLength: 1
+        headId:
+          type: ["integer", "null"]
+        parentId:
+          type: ["integer", "null"]
+        description:
+          type: ["string", "null"]
+        status:
+          type: string
+          enum: [active, inactive]
+          default: active
+      required:
+        - name
+        - code
+
+    DepartmentUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        code:
+          type: string
+          minLength: 1
+        headId:
+          type: ["integer", "null"]
+        parentId:
+          type: ["integer", "null"]
+        description:
+          type: ["string", "null"]
+        status:
+          type: string
+          enum: [active, inactive]
+
+    Employee:
+      type: object
+      properties:
+        id:
+          type: integer
+        employeeId:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: ["string", "null"]
+        departmentId:
+          type: ["integer", "null"]
+        departmentName:
+          type: ["string", "null"]
+        role:
+          type: string
+          enum: [admin, asset_manager, department_head, employee]
+        status:
+          type: string
+          enum: [active, inactive, on_leave]
+        joiningDate:
+          type: ["string", "null"]
+          format: date
+        notes:
+          type: ["string", "null"]
+        allocatedAssetCount:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - employeeId
+        - name
+        - email
+        - role
+        - status
+        - allocatedAssetCount
+        - createdAt
+
+    EmployeeInput:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        email:
+          type: string
+        phone:
+          type: ["string", "null"]
+        departmentId:
+          type: ["integer", "null"]
+        role:
+          type: string
+          enum: [admin, asset_manager, department_head, employee]
+          default: employee
+        status:
+          type: string
+          enum: [active, inactive, on_leave]
+          default: active
+        joiningDate:
+          type: ["string", "null"]
+          format: date
+        notes:
+          type: ["string", "null"]
+      required:
+        - name
+        - email
+
+    EmployeeUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        email:
+          type: string
+        phone:
+          type: ["string", "null"]
+        departmentId:
+          type: ["integer", "null"]
+        role:
+          type: string
+          enum: [admin, asset_manager, department_head, employee]
+        status:
+          type: string
+          enum: [active, inactive, on_leave]
+        joiningDate:
+          type: ["string", "null"]
+          format: date
+        notes:
+          type: ["string", "null"]
+
+    AssetCategory:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        code:
+          type: string
+        description:
+          type: ["string", "null"]
+        warrantyPeriod:
+          type: ["integer", "null"]
+          description: Warranty period in months
+        status:
+          type: string
+          enum: [active, inactive]
+        assetCount:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - name
+        - code
+        - status
+        - assetCount
+        - createdAt
+
+    AssetCategoryInput:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        code:
+          type: string
+          minLength: 1
+        description:
+          type: ["string", "null"]
+        warrantyPeriod:
+          type: ["integer", "null"]
+        status:
+          type: string
+          enum: [active, inactive]
+          default: active
+      required:
+        - name
+        - code
+
+    AssetCategoryUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        code:
+          type: string
+          minLength: 1
+        description:
+          type: ["string", "null"]
+        warrantyPeriod:
+          type: ["integer", "null"]
+        status:
+          type: string
+          enum: [active, inactive]
+
+    Asset:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        tag:
+          type: string
+          description: Auto-generated tag (e.g. AF-000001)
+        serialNumber:
+          type: ["string", "null"]
+        categoryId:
+          type: ["integer", "null"]
+        categoryName:
+          type: ["string", "null"]
+        departmentId:
+          type: ["integer", "null"]
+        departmentName:
+          type: ["string", "null"]
+        employeeId:
+          type: ["integer", "null"]
+        employeeName:
+          type: ["string", "null"]
+        purchaseDate:
+          type: ["string", "null"]
+          format: date
+        purchaseCost:
+          type: ["number", "null"]
+        currentValue:
+          type: ["number", "null"]
+        vendor:
+          type: ["string", "null"]
+        condition:
+          type: string
+          enum: [excellent, good, fair, poor]
+        status:
+          type: string
+          enum: [available, allocated, reserved, under_maintenance, lost, retired, disposed]
+        bookable:
+          type: boolean
+        location:
+          type: ["string", "null"]
+        description:
+          type: ["string", "null"]
+        currentAgeMonths:
+          type: ["integer", "null"]
+        warrantyRemainingMonths:
+          type: ["integer", "null"]
+        deletedAt:
+          type: ["string", "null"]
+          format: date-time
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - name
+        - tag
+        - condition
+        - status
+        - bookable
+        - createdAt
+
+    AssetInput:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        serialNumber:
+          type: ["string", "null"]
+        categoryId:
+          type: ["integer", "null"]
+        departmentId:
+          type: ["integer", "null"]
+        employeeId:
+          type: ["integer", "null"]
+        purchaseDate:
+          type: ["string", "null"]
+          format: date
+        purchaseCost:
+          type: ["number", "null"]
+        currentValue:
+          type: ["number", "null"]
+        vendor:
+          type: ["string", "null"]
+        condition:
+          type: string
+          enum: [excellent, good, fair, poor]
+          default: good
+        status:
+          type: string
+          enum: [available, allocated, reserved, under_maintenance, lost, retired, disposed]
+          default: available
+        bookable:
+          type: boolean
+          default: false
+        location:
+          type: ["string", "null"]
+        description:
+          type: ["string", "null"]
+      required:
+        - name
+
+    AssetUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+        serialNumber:
+          type: ["string", "null"]
+        categoryId:
+          type: ["integer", "null"]
+        departmentId:
+          type: ["integer", "null"]
+        employeeId:
+          type: ["integer", "null"]
+        purchaseDate:
+          type: ["string", "null"]
+          format: date
+        purchaseCost:
+          type: ["number", "null"]
+        currentValue:
+          type: ["number", "null"]
+        vendor:
+          type: ["string", "null"]
+        condition:
+          type: string
+          enum: [excellent, good, fair, poor]
+        status:
+          type: string
+          enum: [available, allocated, reserved, under_maintenance, lost, retired, disposed]
+        bookable:
+          type: boolean
+        location:
+          type: ["string", "null"]
+        description:
+          type: ["string", "null"]
+
+    AssetAllocation:
+      type: object
+      properties:
+        id:
+          type: integer
+        allocationNumber:
+          type: string
+        assetId:
+          type: integer
+        assetName:
+          type: ["string", "null"]
+        assetTag:
+          type: ["string", "null"]
+        employeeId:
+          type: integer
+        employeeName:
+          type: ["string", "null"]
+        departmentId:
+          type: integer
+        departmentName:
+          type: ["string", "null"]
+        allocationDate:
+          type: string
+          format: date
+        expectedReturnDate:
+          type: string
+          format: date
+        actualReturnDate:
+          type: ["string", "null"]
+          format: date
+        status:
+          type: string
+          enum: [draft, allocated, returned, cancelled]
+        remarks:
+          type: ["string", "null"]
+        createdBy:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - allocationNumber
+        - assetId
+        - employeeId
+        - departmentId
+        - allocationDate
+        - expectedReturnDate
+        - status
+        - createdAt
+        - updatedAt
+
+    AssetAllocationInput:
+      type: object
+      properties:
+        assetId:
+          type: integer
+        employeeId:
+          type: integer
+        departmentId:
+          type: integer
+        allocationDate:
+          type: string
+          format: date
+        expectedReturnDate:
+          type: string
+          format: date
+        remarks:
+          type: ["string", "null"]
+      required:
+        - assetId
+        - employeeId
+        - expectedReturnDate
+
+    AssetAllocationUpdate:
+      type: object
+      properties:
+        assetId:
+          type: integer
+        employeeId:
+          type: integer
+        departmentId:
+          type: integer
+        allocationDate:
+          type: string
+          format: date
+        expectedReturnDate:
+          type: string
+          format: date
+        remarks:
+          type: ["string", "null"]
+        status:
+          type: string
+          enum: [draft, allocated, returned, cancelled]
+
+    TransferRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        transferNumber:
+          type: string
+        assetId:
+          type: integer
+        assetName:
+          type: ["string", "null"]
+        assetTag:
+          type: ["string", "null"]
+        currentHolderId:
+          type: ["integer", "null"]
+        currentHolderName:
+          type: ["string", "null"]
+        requestedEmployeeId:
+          type: integer
+        requestedEmployeeName:
+          type: ["string", "null"]
+        requestedDepartmentId:
+          type: integer
+        requestedDepartmentName:
+          type: ["string", "null"]
+        reason:
+          type: string
+        requestDate:
+          type: string
+          format: date
+        status:
+          type: string
+          enum: [pending, approved, rejected, completed, cancelled]
+        remarks:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - transferNumber
+        - assetId
+        - requestedEmployeeId
+        - requestedDepartmentId
+        - reason
+        - requestDate
+        - status
+        - createdAt
+
+    TransferRequestInput:
+      type: object
+      properties:
+        assetId:
+          type: integer
+        requestedEmployeeId:
+          type: integer
+        requestedDepartmentId:
+          type: integer
+        reason:
+          type: string
+        remarks:
+          type: ["string", "null"]
+      required:
+        - assetId
+        - requestedEmployeeId
+        - reason
+
+    TransferRequestUpdate:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [pending, approved, rejected, completed, cancelled]
+        remarks:
+          type: ["string", "null"]
+
+    AllocationHistory:
+      type: object
+      properties:
+        id:
+          type: integer
+        action:
+          type: string
+        userId:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        assetId:
+          type: integer
+        assetName:
+          type: ["string", "null"]
+        assetTag:
+          type: ["string", "null"]
+        employeeId:
+          type: ["integer", "null"]
+        employeeName:
+          type: ["string", "null"]
+        departmentId:
+          type: ["integer", "null"]
+        departmentName:
+          type: ["string", "null"]
+        oldStatus:
+          type: ["string", "null"]
+        newStatus:
+          type: ["string", "null"]
+      required:
+        - id
+        - action
+        - userId
+        - timestamp
+        - assetId
+
+    ReturnAllocationInput:
+      type: object
+      properties:
+        remarks:
+          type: ["string", "null"]
+
+    ApproveTransferInput:
+      type: object
+      properties:
+        remarks:
+          type: ["string", "null"]
+
+    RejectTransferInput:
+      type: object
+      properties:
+        remarks:
+          type: ["string", "null"]
+
+    CompleteTransferInput:
+      type: object
+      properties:
+        remarks:
+          type: ["string", "null"]
+
+    CancelTransferInput:
+      type: object
+      properties:
+        remarks:
+          type: ["string", "null"]
+
+    Booking:
+      type: object
+      properties:
+        id:
+          type: integer
+        bookingNumber:
+          type: string
+        resourceId:
+          type: integer
+        resourceName:
+          type: ["string", "null"]
+        resourceTag:
+          type: ["string", "null"]
+        employeeId:
+          type: integer
+        employeeName:
+          type: ["string", "null"]
+        departmentId:
+          type: integer
+        departmentName:
+          type: ["string", "null"]
+        purpose:
+          type: string
+        bookingDate:
+          type: string
+          format: date
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum: [requested, approved, rejected, active, completed, cancelled]
+        notes:
+          type: ["string", "null"]
+        createdBy:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - bookingNumber
+        - resourceId
+        - employeeId
+        - departmentId
+        - purpose
+        - bookingDate
+        - startTime
+        - endTime
+        - status
+        - createdAt
+
+    BookingInput:
+      type: object
+      properties:
+        resourceId:
+          type: integer
+        employeeId:
+          type: integer
+        purpose:
+          type: string
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+        notes:
+          type: ["string", "null"]
+      required:
+        - resourceId
+        - employeeId
+        - purpose
+        - startTime
+        - endTime
+
+    BookingUpdate:
+      type: object
+      properties:
+        startTime:
+          type: string
+          format: date-time
+        endTime:
+          type: string
+          format: date-time
+        purpose:
+          type: string
+        notes:
+          type: ["string", "null"]
+
+    Maintenance:
+      type: object
+      properties:
+        id:
+          type: integer
+        maintenanceNumber:
+          type: string
+        assetId:
+          type: integer
+        assetName:
+          type: ["string", "null"]
+        assetTag:
+          type: ["string", "null"]
+        issueTitle:
+          type: string
+        issueDescription:
+          type: string
+        priority:
+          type: string
+          enum: [low, medium, high, critical]
+        technicianId:
+          type: ["integer", "null"]
+        technicianName:
+          type: ["string", "null"]
+        estimatedCost:
+          type: number
+        actualCost:
+          type: ["number", "null"]
+        status:
+          type: string
+          enum: [raised, approved, assigned, in_progress, resolved, closed]
+        resolutionNotes:
+          type: ["string", "null"]
+        createdDate:
+          type: string
+          format: date
+        assignedDate:
+          type: ["string", "null"]
+          format: date
+        completedDate:
+          type: ["string", "null"]
+          format: date
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - maintenanceNumber
+        - assetId
+        - issueTitle
+        - issueDescription
+        - priority
+        - estimatedCost
+        - status
+        - createdDate
+        - createdAt
+
+    MaintenanceInput:
+      type: object
+      properties:
+        assetId:
+          type: integer
+        issueTitle:
+          type: string
+        issueDescription:
+          type: string
+        priority:
+          type: string
+          enum: [low, medium, high, critical]
+        estimatedCost:
+          type: number
+      required:
+        - assetId
+        - issueTitle
+        - issueDescription
+        - estimatedCost
+
+    MaintenanceUpdate:
+      type: object
+      properties:
+        issueTitle:
+          type: string
+        issueDescription:
+          type: string
+        priority:
+          type: string
+          enum: [low, medium, high, critical]
+        technicianId:
+          type: ["integer", "null"]
+        estimatedCost:
+          type: number
+        actualCost:
+          type: ["number", "null"]
+        status:
+          type: string
+          enum: [raised, approved, assigned, in_progress, resolved, closed]
+        resolutionNotes:
+          type: ["string", "null"]
+
+    Notification:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        message:
+          type: string
+        read:
+          type: boolean
+        type:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - title
+        - message
+        - read
+        - type
+        - createdAt
+
+    ActivityLog:
+      type: object
+      properties:
+        id:
+          type: integer
+        entityType:
+          type: string
+        entityId:
+          type: integer
+        action:
+          type: string
+        previousState:
+          type: ["string", "null"]
+        newState:
+          type: string
+        userId:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+      required:
+        - id
+        - entityType
+        - entityId
+        - action
+        - newState
+        - userId
+        - timestamp

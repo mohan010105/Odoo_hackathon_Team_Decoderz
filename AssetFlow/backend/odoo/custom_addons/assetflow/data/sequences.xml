@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Asset Tag: AF-000001 -->
+        <record id="seq_af_asset" model="ir.sequence">
+            <field name="name">AssetFlow Asset Tag</field>
+            <field name="code">af.asset.sequence</field>
+            <field name="prefix">AF-</field>
+            <field name="padding">6</field>
+            <field name="number_increment">1</field>
+            <field name="number_next">1</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Employee ID: EMP-00001 -->
+        <record id="seq_af_employee" model="ir.sequence">
+            <field name="name">AssetFlow Employee ID</field>
+            <field name="code">af.employee.sequence</field>
+            <field name="prefix">EMP-</field>
+            <field name="padding">5</field>
+            <field name="number_increment">1</field>
+            <field name="number_next">1</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Asset Allocation: AL-000001 -->
+        <record id="seq_af_asset_allocation" model="ir.sequence">
+            <field name="name">AssetFlow Asset Allocation</field>
+            <field name="code">af.asset.allocation.sequence</field>
+            <field name="prefix">AL-</field>
+            <field name="padding">6</field>
+            <field name="number_increment">1</field>
+            <field name="number_next">1</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Transfer Request: TR-000001 -->
+        <record id="seq_af_transfer_request" model="ir.sequence">
+            <field name="name">AssetFlow Transfer Request</field>
+            <field name="code">af.transfer.request.sequence</field>
+            <field name="prefix">TR-</field>
+            <field name="padding">6</field>
+            <field name="number_increment">1</field>
+            <field name="number_next">1</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Activity ID: ACT-000001 -->
+        <record id="seq_af_activity" model="ir.sequence">
+            <field name="name">AssetFlow Activity Tag</field>
+            <field name="code">af.activity.sequence</field>
+            <field name="prefix">ACT-</field>
+            <field name="padding">6</field>
+            <field name="number_increment">1</field>
+            <field name="number_next">1</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Notification ID: NTF-000001 -->
+        <record id="seq_af_notification" model="ir.sequence">
+            <field name="name">AssetFlow Notification ID</field>
+            <field name="code">af.notification.sequence</field>
+            <field name="prefix">NTF-</field>
+            <field name="padding">6</field>
+            <field name="number_increment">1</field>
+            <field name="number_next">1</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Approval ID: APR-000001 -->
+        <record id="seq_af_approval" model="ir.sequence">
+            <field name="name">AssetFlow Approval ID</field>
+            <field name="code">af.approval.sequence</field>
+            <field name="prefix">APR-</field>
+            <field name="padding">6</field>
+            <field name="number_increment">1</field>
+            <field name="number_next">1</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- Alert ID: ALT-000001 -->
+        <record id="seq_af_system_alert" model="ir.sequence">
+            <field name="name">AssetFlow Alert ID</field>
+            <field name="code">af.system.alert.sequence</field>
+            <field name="prefix">ALT-</field>
+            <field name="padding">6</field>
+            <field name="number_increment">1</field>
+            <field name="number_next">1</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- ============================================================
+             List View (Read-Only)
+             ============================================================ -->
+        <record id="view_af_allocation_history_list" model="ir.ui.view">
+            <field name="name">af.allocation.history.list</field>
+            <field name="model">af.allocation.history</field>
+            <field name="arch" type="xml">
+                <list string="Allocation History" create="false" edit="false" delete="false">
+                    <field name="timestamp"/>
+                    <field name="asset_id"/>
+                    <field name="employee_id"/>
+                    <field name="department_id"/>
+                    <field name="action" widget="badge"
+                        decoration-success="action == 'return'"
+                        decoration-primary="action == 'allocate'"
+                        decoration-info="action == 'transfer'"
+                        decoration-danger="action == 'cancel'"/>
+                    <field name="user_id"/>
+                    <field name="old_status" optional="hide"/>
+                    <field name="new_status" optional="hide"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- ============================================================
+             Search View
+             ============================================================ -->
+        <record id="view_af_allocation_history_search" model="ir.ui.view">
+            <field name="name">af.allocation.history.search</field>
+            <field name="model">af.allocation.history</field>
+            <field name="arch" type="xml">
+                <search string="Search History">
+                    <field name="asset_id"/>
+                    <field name="employee_id"/>
+                    <field name="department_id"/>
+                    <field name="action"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Asset" name="group_asset" context="{'group_by': 'asset_id'}"/>
+                        <filter string="Employee" name="group_employee" context="{'group_by': 'employee_id'}"/>
+                        <filter string="Department" name="group_department" context="{'group_by': 'department_id'}"/>
+                        <filter string="Action" name="group_action" context="{'group_by': 'action'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- ============================================================
+             Window Action
+             ============================================================ -->
+        <record id="action_af_allocation_history" model="ir.actions.act_window">
+            <field name="name">Allocation History</field>
+            <field name="res_model">af.allocation.history</field>
+            <field name="view_mode">list</field>
+            <field name="search_view_id" ref="view_af_allocation_history_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_empty_folder">
+                    No history logged yet
+                </p>
+                <p>Allocation and transfer audit events are logged here automatically.</p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- ============================================================
+             Activity: Tree View
+             ============================================================ -->
+        <record id="view_af_activity_tree" model="ir.ui.view">
+            <field name="name">af.activity.tree</field>
+            <field name="model">af.activity</field>
+            <field name="arch" type="xml">
+                <tree string="Activities" default_order="timestamp desc"
+                      decoration-danger="priority == 'critical'"
+                      decoration-warning="priority == 'high'"
+                      decoration-info="status == 'unread'"
+                      decoration-muted="status == 'archived'">
+                    <field name="name"/>
+                    <field name="timestamp" widget="datetime"/>
+                    <field name="activity_type"/>
+                    <field name="module"/>
+                    <field name="title"/>
+                    <field name="performed_by"/>
+                    <field name="asset_id" optional="show"/>
+                    <field name="department_id" optional="show"/>
+                    <field name="priority" widget="badge"
+                           decoration-danger="priority == 'critical'"
+                           decoration-warning="priority == 'high'"
+                           decoration-info="priority == 'medium'"
+                           decoration-success="priority == 'low'"/>
+                    <field name="status" widget="badge"
+                           decoration-info="status == 'unread'"
+                           decoration-success="status == 'read'"
+                           decoration-muted="status == 'archived'"/>
+                    <field name="date_group" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- ============================================================
+             Activity: Form View (Read-Only)
+             ============================================================ -->
+        <record id="view_af_activity_form" model="ir.ui.view">
+            <field name="name">af.activity.form</field>
+            <field name="model">af.activity</field>
+            <field name="arch" type="xml">
+                <form string="Activity" create="false" edit="false" delete="false">
+                    <header>
+                        <button name="action_mark_read" type="object"
+                                string="Mark as Read" class="btn-primary"
+                                invisible="status != 'unread'"/>
+                        <button name="action_mark_unread" type="object"
+                                string="Mark as Unread" class="btn-secondary"
+                                invisible="status != 'read'"/>
+                        <button name="action_archive" type="object"
+                                string="Archive" class="btn-secondary"
+                                invisible="status == 'archived'"/>
+                        <field name="status" widget="statusbar"
+                               statusbar_visible="unread,read,archived"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="title" readonly="1"/>
+                            </h1>
+                            <h4>
+                                <field name="name" readonly="1"/>
+                            </h4>
+                        </div>
+                        <group>
+                            <group string="Details">
+                                <field name="activity_type"/>
+                                <field name="module"/>
+                                <field name="priority"/>
+                                <field name="timestamp"/>
+                                <field name="date_group"/>
+                            </group>
+                            <group string="Context">
+                                <field name="performed_by"/>
+                                <field name="department_id"/>
+                                <field name="asset_id"/>
+                                <field name="employee_id"/>
+                            </group>
+                        </group>
+                        <group string="Description">
+                            <field name="description" nolabel="1" colspan="2"/>
+                        </group>
+                        <group string="Technical" groups="assetflow.group_assetflow_admin">
+                            <field name="related_model"/>
+                            <field name="related_record_id"/>
+                            <field name="action_url"/>
+                            <field name="metadata"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- ============================================================
+             Activity: Search View
+             ============================================================ -->
+        <record id="view_af_activity_search" model="ir.ui.view">
+            <field name="name">af.activity.search</field>
+            <field name="model">af.activity</field>
+            <field name="arch" type="xml">
+                <search string="Search Activities">
+                    <field name="title"/>
+                    <field name="description"/>
+                    <field name="performed_by"/>
+                    <field name="asset_id"/>
+                    <field name="employee_id"/>
+                    <field name="department_id"/>
+                    <separator/>
+                    <filter string="Unread" name="unread"
+                            domain="[('status', '=', 'unread')]"/>
+                    <filter string="Read" name="read"
+                            domain="[('status', '=', 'read')]"/>
+                    <filter string="Archived" name="archived"
+                            domain="[('status', '=', 'archived')]"/>
+                    <separator/>
+                    <filter string="Critical" name="critical"
+                            domain="[('priority', '=', 'critical')]"/>
+                    <filter string="High Priority" name="high"
+                            domain="[('priority', '=', 'high')]"/>
+                    <separator/>
+                    <filter string="Today" name="today"
+                            domain="[('date_group', '=', 'Today')]"/>
+                    <filter string="Yesterday" name="yesterday"
+                            domain="[('date_group', '=', 'Yesterday')]"/>
+                    <filter string="Last 7 Days" name="last_week"
+                            domain="[('date_group', '=', 'Last 7 Days')]"/>
+                    <separator/>
+                    <filter string="Assets" name="module_asset"
+                            domain="[('module', '=', 'asset')]"/>
+                    <filter string="Allocation" name="module_allocation"
+                            domain="[('module', '=', 'allocation')]"/>
+                    <filter string="Transfers" name="module_transfer"
+                            domain="[('module', '=', 'transfer')]"/>
+                    <filter string="Booking" name="module_booking"
+                            domain="[('module', '=', 'booking')]"/>
+                    <filter string="Maintenance" name="module_maintenance"
+                            domain="[('module', '=', 'maintenance')]"/>
+                    <filter string="Audit" name="module_audit"
+                            domain="[('module', '=', 'audit')]"/>
+                    <filter string="Reports" name="module_report"
+                            domain="[('module', '=', 'report')]"/>
+                    <separator/>
+                    <group expand="0" string="Group By">
+                        <filter string="Date" name="group_date"
+                                context="{'group_by': 'date_group'}"/>
+                        <filter string="Module" name="group_module"
+                                context="{'group_by': 'module'}"/>
+                        <filter string="Priority" name="group_priority"
+                                context="{'group_by': 'priority'}"/>
+                        <filter string="Type" name="group_type"
+                                context="{'group_by': 'activity_type'}"/>
+                        <filter string="Status" name="group_status"
+                                context="{'group_by': 'status'}"/>
+                        <filter string="Department" name="group_department"
+                                context="{'group_by': 'department_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- ============================================================
+             Activity: Action
+             ============================================================ -->
+        <record id="action_af_activity" model="ir.actions.act_window">
+            <field name="name">Activity Timeline</field>
+            <field name="res_model">af.activity</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_af_activity_search"/>
+            <field name="context">{'search_default_unread': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No activities recorded yet.
+                </p>
+                <p>Activities will appear here as you work with assets, allocations, and other modules.</p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

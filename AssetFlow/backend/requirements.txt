@@ -1,0 +1,49 @@
+# AssetFlow – Python dependencies
+# Install via: python3.11 -m pip install -r requirements.txt
+# Or run: bash backend/scripts/install_deps.sh
+
+# Core Odoo framework (installed as editable from source)
+# -e backend/odoo/odoo-src
+
+# Runtime dependencies
+Babel
+lxml>=4.9.3
+lxml-html-clean
+Pillow
+passlib
+psutil
+psycopg2-binary
+python-dateutil
+pytz
+requests
+werkzeug
+openpyxl
+PyPDF2
+python-stdnum
+num2words
+MarkupSafe>=2.1
+Jinja2
+decorator
+docutils
+chardet
+cryptography
+polib
+libsass
+geoip2
+freezegun
+cbor2
+ofxparse
+html2text
+reportlab
+asn1crypto
+pyopenssl
+rjsmin
+xlsxwriter
+zeep
+gevent
+greenlet
+pyusb
+vobject
+python-barcode
+qrcode
+python-ldap

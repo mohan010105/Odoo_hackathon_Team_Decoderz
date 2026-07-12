@@ -1,0 +1,57 @@
+# =======================================================================
+# AssetFlow – .gitignore
+# =======================================================================
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+pip-wheel-metadata/
+
+# Virtual environments (not used on Replit, but excluded for portability)
+venv/
+.venv/
+env/
+.env/
+ENV/
+
+# Odoo runtime
+.odoo_history
+*.log
+filestore/
+sessions/
+
+# Node / frontend
+node_modules/
+.npm/
+*.lock
+dist/
+.cache/
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets (never commit)
+.env
+*.env.local
+*.env.*.local
+secrets/
+
+# Replit (keep these in git)
+# .replit — keep
+# replit.nix — keep

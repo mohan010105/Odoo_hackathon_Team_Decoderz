@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- ============================================================
+             Notification: Tree View
+             ============================================================ -->
+        <record id="view_af_notification_tree" model="ir.ui.view">
+            <field name="name">af.notification.tree</field>
+            <field name="model">af.notification</field>
+            <field name="arch" type="xml">
+                <tree string="Notifications" default_order="created_time desc"
+                      decoration-danger="priority == 'critical'"
+                      decoration-warning="priority == 'high'"
+                      decoration-info="status == 'unread'"
+                      decoration-muted="status == 'archived'">
+                    <field name="name"/>
+                    <field name="created_time" widget="datetime"/>
+                    <field name="title"/>
+                    <field name="recipient_id"/>
+                    <field name="category" widget="badge"
+                           decoration-success="category == 'success'"
+                           decoration-info="category == 'info'"
+                           decoration-warning="category in ('warning', 'reminder')"
+                           decoration-danger="category in ('critical', 'approval')"/>
+                    <field name="priority" widget="badge"
+                           decoration-danger="priority == 'critical'"
+                           decoration-warning="priority == 'high'"
+                           decoration-info="priority == 'medium'"
+                           decoration-success="priority == 'low'"/>
+                    <field name="status" widget="badge"
+                           decoration-info="status == 'unread'"
+                           decoration-success="status == 'read'"
+                           decoration-muted="status == 'archived'"/>
+                    <field name="department_id" optional="hide"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- ============================================================
+             Notification: Form View
+             ============================================================ -->
+        <record id="view_af_notification_form" model="ir.ui.view">
+            <field name="name">af.notification.form</field>
+            <field name="model">af.notification</field>
+            <field name="arch" type="xml">
+                <form string="Notification" create="false" delete="false">
+                    <header>
+                        <button name="action_mark_read" type="object"
+                                string="Mark as Read" class="btn-primary"
+                                invisible="status != 'unread'"/>
+                        <button name="action_mark_unread" type="object"
+                                string="Mark as Unread" class="btn-secondary"
+                                invisible="status != 'read'"/>
+                        <button name="action_archive" type="object"
+                                string="Archive" class="btn-secondary"
+                                invisible="status == 'archived'"/>
+                        <field name="status" widget="statusbar"
+                               statusbar_visible="unread,read,archived"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="title" readonly="1"/>
+                            </h1>
+                            <h4>
+                                <field name="name" readonly="1"/>
+                            </h4>
+                        </div>
+                        <group>
+                            <group string="Details">
+                                <field name="category"/>
+                                <field name="priority"/>
+                                <field name="created_time"/>
+                                <field name="read_time"/>
+                            </group>
+                            <group string="Recipient">
+                                <field name="recipient_id"/>
+                                <field name="department_id"/>
+                            </group>
+                        </group>
+                        <group string="Description">
+                            <field name="description" nolabel="1" colspan="2"/>
+                        </group>
+                        <group string="Action">
+                            <field name="action_button"/>
+                            <field name="action_url" widget="url"/>
+                            <field name="related_activity_id"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- ============================================================
+             Notification: Search View
+             ============================================================ -->
+        <record id="view_af_notification_search" model="ir.ui.view">
+            <field name="name">af.notification.search</field>
+            <field name="model">af.notification</field>
+            <field name="arch" type="xml">
+                <search string="Search Notifications">
+                    <field name="title"/>
+                    <field name="description"/>
+                    <field name="recipient_id"/>
+                    <field name="department_id"/>
+                    <separator/>
+                    <filter string="Unread" name="unread"
+                            domain="[('status', '=', 'unread')]"/>
+                    <filter string="Read" name="read"
+                            domain="[('status', '=', 'read')]"/>
+                    <filter string="Archived" name="archived"
+                            domain="[('status', '=', 'archived')]"/>
+                    <separator/>
+                    <filter string="Critical" name="critical"
+                            domain="[('priority', '=', 'critical')]"/>
+                    <filter string="High Priority" name="high"
+                            domain="[('priority', '=', 'high')]"/>
+                    <separator/>
+                    <filter string="Success" name="success"
+                            domain="[('category', '=', 'success')]"/>
+                    <filter string="Information" name="info"
+                            domain="[('category', '=', 'info')]"/>
+                    <filter string="Warning" name="warning"
+                            domain="[('category', '=', 'warning')]"/>
+                    <filter string="Approval" name="approval"
+                            domain="[('category', '=', 'approval')]"/>
+                    <filter string="Reminder" name="reminder"
+                            domain="[('category', '=', 'reminder')]"/>
+                    <separator/>
+                    <filter string="My Notifications" name="my_notifications"
+                            domain="[('recipient_id', '=', uid)]"/>
+                    <separator/>
+                    <group expand="0" string="Group By">
+                        <filter string="Category" name="group_category"
+                                context="{'group_by': 'category'}"/>
+                        <filter string="Priority" name="group_priority"
+                                context="{'group_by': 'priority'}"/>
+                        <filter string="Status" name="group_status"
+                                context="{'group_by': 'status'}"/>
+                        <filter string="Recipient" name="group_recipient"
+                                context="{'group_by': 'recipient_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- ============================================================
+             Notification: Action
+             ============================================================ -->
+        <record id="action_af_notification" model="ir.actions.act_window">
+            <field name="name">Notifications</field>
+            <field name="res_model">af.notification</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_af_notification_search"/>
+            <field name="context">{'search_default_my_notifications': 1, 'search_default_unread': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No notifications yet.
+                </p>
+                <p>You will receive notifications when activities related to your work occur.</p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

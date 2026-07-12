@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- ============================================================
+             Asset Record Rules
+             ============================================================ -->
+
+        <!-- Employee: can only see assets assigned to them -->
+        <record id="rule_asset_employee_own" model="ir.rule">
+            <field name="name">Asset: Employee sees own assets only</field>
+            <field name="model_id" ref="model_af_asset"/>
+            <field name="groups" eval="[(4, ref('assetflow.group_assetflow_employee'))]"/>
+            <field name="domain_force">
+                [('employee_id.user_id', '=', user.id)]
+            </field>
+            <field name="perm_read">1</field>
+            <field name="perm_write">0</field>
+            <field name="perm_create">0</field>
+            <field name="perm_unlink">0</field>
+        </record>
+
+        <!-- Asset Manager: can see all assets (no restriction) -->
+        <record id="rule_asset_manager_all" model="ir.rule">
+            <field name="name">Asset: Manager sees all assets</field>
+            <field name="model_id" ref="model_af_asset"/>
+            <field name="groups" eval="[(4, ref('assetflow.group_assetflow_manager'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="perm_read">1</field>
+            <field name="perm_write">1</field>
+            <field name="perm_create">1</field>
+            <field name="perm_unlink">0</field>
+        </record>
+
+        <!-- Admin: unrestricted -->
+        <record id="rule_asset_admin_all" model="ir.rule">
+            <field name="name">Asset: Admin unrestricted</field>
+            <field name="model_id" ref="model_af_asset"/>
+            <field name="groups" eval="[(4, ref('assetflow.group_assetflow_admin'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="perm_read">1</field>
+            <field name="perm_write">1</field>
+            <field name="perm_create">1</field>
+            <field name="perm_unlink">1</field>
+        </record>
+
+        <!-- ============================================================
+             Asset Allocation Record Rules
+             ============================================================ -->
+
+        <!-- Employee: own allocations only -->
+        <record id="rule_asset_allocation_employee_own" model="ir.rule">
+            <field name="name">Asset Allocation: Employee sees own allocations only</field>
+            <field name="model_id" ref="model_af_asset_allocation"/>
+            <field name="groups" eval="[(4, ref('assetflow.group_assetflow_employee'))]"/>
+            <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
+            <field name="perm_read">1</field>
+            <field name="perm_write">0</field>
+            <field name="perm_create">0</field>
+            <field name="perm_unlink">0</field>
+        </record>
+
+        <!-- Manager: sees all allocations -->
+        <record id="rule_asset_allocation_manager_all" model="ir.rule">
+            <field name="name">Asset Allocation: Manager sees all allocations</field>
+            <field name="model_id" ref="model_af_asset_allocation"/>
+            <field name="groups" eval="[(4, ref('assetflow.group_assetflow_manager'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="perm_read">1</field>
+            <field name="perm_write">1</field>
+            <field name="perm_create">1</field>
+            <field name="perm_unlink">0</field>
+        </record>
+
+        <!-- Admin: unrestricted allocations -->
+        <record id="rule_asset_allocation_admin_all" model="ir.rule">
+            <field name="name">Asset Allocation: Admin unrestricted</field>
+            <field name="model_id" ref="model_af_asset_allocation"/>
+            <field name="groups" eval="[(4, ref('assetflow.group_assetflow_admin'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="perm_read">1</field>
+            <field name="perm_write">1</field>
+            <field name="perm_create">1</field>
+            <field name="perm_unlink">1</field>
+        </record>
+
+        <!-- ============================================================
+             Transfer Request Record Rules
+             ============================================================ -->
+
+        <!-- Employee: sees transfers where they are current or requested employee -->
+        <record id="rule_transfer_request_employee_own" model="ir.rule">
+            <field name="name">Transfer Request: Employee sees own transfers only</field>
+            <field name="model_id" ref="model_af_transfer_request"/>
+            <field name="groups" eval="[(4, ref('assetflow.group_assetflow_employee'))]"/>
+            <field name="domain_force">['|', ('current_holder_id.user_id', '=', user.id), ('requested_employee_id.user_id', '=', user.id)]</field>
+            <field name="perm_read">1</field>
+            <field name="perm_write">1</field>
+            <field name="perm_create">1</field>
+            <field name="perm_unlink">0</field>
+        </record>
+
+        <!-- Manager: sees all transfers -->
+        <record id="rule_transfer_request_manager_all" model="ir.rule">
+            <field name="name">Transfer Request: Manager sees all transfers</field>
+            <field name="model_id" ref="model_af_transfer_request"/>
+            <field name="groups" eval="[(4, ref('assetflow.group_assetflow_manager'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="perm_read">1</field>
+            <field name="perm_write">1</field>
+            <field name="perm_create">1</field>
+            <field name="perm_unlink">0</field>
+        </record>
+
+        <!-- Admin: unrestricted transfers -->
+        <record id="rule_transfer_request_admin_all" model="ir.rule">
+            <field name="name">Transfer Request: Admin unrestricted</field>
+            <field name="model_id" ref="model_af_transfer_request"/>
+            <field name="groups" eval="[(4, ref('assetflow.group_assetflow_admin'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="perm_read">1</field>
+            <field name="perm_write">1</field>
+            <field name="perm_create">1</field>
+            <field name="perm_unlink">1</field>
+        </record>
+
+        <!-- ============================================================
+             Allocation History Record Rules
+             ============================================================ -->
+
+        <!-- Employee: sees history related to own assets -->
+        <record id="rule_allocation_history_employee_own" model="ir.rule">
+            <field name="name">Allocation History: Employee sees own history only</field>
+            <field name="model_id" ref="model_af_allocation_history"/>
+            <field name="groups" eval="[(4, ref('assetflow.group_assetflow_employee'))]"/>
+            <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
+            <field name="perm_read">1</field>
+            <field name="perm_write">0</field>
+            <field name="perm_create">0</field>
+            <field name="perm_unlink">0</field>
+        </record>
+
+        <!-- Manager: sees all history -->
+        <record id="rule_allocation_history_manager_all" model="ir.rule">
+            <field name="name">Allocation History: Manager sees all history</field>
+            <field name="model_id" ref="model_af_allocation_history"/>
+            <field name="groups" eval="[(4, ref('assetflow.group_assetflow_manager'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="perm_read">1</field>
+            <field name="perm_write">0</field>
+            <field name="perm_create">0</field>
+            <field name="perm_unlink">0</field>
+        </record>
+
+        <!-- Admin: unrestricted history (still read-only per python code) -->
+        <record id="rule_allocation_history_admin_all" model="ir.rule">
+            <field name="name">Allocation History: Admin unrestricted</field>
+            <field name="model_id" ref="model_af_allocation_history"/>
+            <field name="groups" eval="[(4, ref('assetflow.group_assetflow_admin'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="perm_read">1</field>
+            <field name="perm_write">1</field>
+            <field name="perm_create">1</field>
+            <field name="perm_unlink">1</field>
+        </record>
+
+        <!-- ============================================================
+             Activity Record Rules
+             ============================================================ -->
+        <record id="rule_activity_employee" model="ir.rule">
+            <field name="name">Activity: Employee sees own activities</field>
+            <field name="model_id" ref="model_af_activity"/>
+            <field name="groups" eval="[(4, ref('assetflow.group_assetflow_employee'))]"/>
+            <field name="domain_force">[('performed_by', '=', user.id)]</field>
+            <field name="perm_read">1</field>
+            <field name="perm_write">0</field>
+            <field name="perm_create">0</field>
+            <field name="perm_unlink">0</field>
+        </record>
+
+        <record id="rule_activity_manager" model="ir.rule">
+            <field name="name">Activity: Manager sees all</field>
+            <field name="model_id" ref="model_af_activity"/>
+            <field name="groups" eval="[(4, ref('assetflow.group_assetflow_manager'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="perm_read">1</field>
+            <field name="perm_write">0</field>
+            <field name="perm_create">0</field>
+            <field name="perm_unlink">0</field>
+        </record>
+
+        <record id="rule_activity_admin" model="ir.rule">
+            <field name="name">Activity: Admin unrestricted</field>
+            <field name="model_id" ref="model_af_activity"/>
+            <field name="groups" eval="[(4, ref('assetflow.group_assetflow_admin'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="perm_read">1</field>
+            <field name="perm_write">1</field>
+            <field name="perm_create">1</field>
+            <field name="perm_unlink">1</field>
+        </record>
+
+        <!-- ============================================================
+             Notification Record Rules
+             ============================================================ -->
+        <record id="rule_notification_employee" model="ir.rule">
+            <field name="name">Notification: Employee sees own notifications</field>
+            <field name="model_id" ref="model_af_notification"/>
+            <field name="groups" eval="[(4, ref('assetflow.group_assetflow_employee'))]"/>
+            <field name="domain_force">[('recipient_id', '=', user.id)]</field>
+            <field name="perm_read">1</field>
+            <field name="perm_write">1</field>
+            <field name="perm_create">1</field>
+            <field name="perm_unlink">0</field>
+        </record>
+
+        <record id="rule_notification_manager" model="ir.rule">
+            <field name="name">Notification: Manager sees all</field>
+            <field name="model_id" ref="model_af_notification"/>
+            <field name="groups" eval="[(4, ref('assetflow.group_assetflow_manager'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="perm_read">1</field>
+            <field name="perm_write">1</field>
+            <field name="perm_create">1</field>
+            <field name="perm_unlink">0</field>
+        </record>
+
+        <record id="rule_notification_admin" model="ir.rule">
+            <field name="name">Notification: Admin unrestricted</field>
+            <field name="model_id" ref="model_af_notification"/>
+            <field name="groups" eval="[(4, ref('assetflow.group_assetflow_admin'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="perm_read">1</field>
+            <field name="perm_write">1</field>
+            <field name="perm_create">1</field>
+            <field name="perm_unlink">1</field>
+        </record>
+
+        <!-- ============================================================
+             Approval Record Rules
+             ============================================================ -->
+        <record id="rule_approval_employee" model="ir.rule">
+            <field name="name">Approval: Employee sees own requested approvals</field>
+            <field name="model_id" ref="model_af_approval"/>
+            <field name="groups" eval="[(4, ref('assetflow.group_assetflow_employee'))]"/>
+            <field name="domain_force">[('requested_by', '=', user.id)]</field>
+            <field name="perm_read">1</field>
+            <field name="perm_write">0</field>
+            <field name="perm_create">0</field>
+            <field name="perm_unlink">0</field>
+        </record>
+
+        <record id="rule_approval_manager" model="ir.rule">
+            <field name="name">Approval: Manager sees all</field>
+            <field name="model_id" ref="model_af_approval"/>
+            <field name="groups" eval="[(4, ref('assetflow.group_assetflow_manager'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="perm_read">1</field>
+            <field name="perm_write">1</field>
+            <field name="perm_create">1</field>
+            <field name="perm_unlink">0</field>
+        </record>
+
+        <record id="rule_approval_admin" model="ir.rule">
+            <field name="name">Approval: Admin unrestricted</field>
+            <field name="model_id" ref="model_af_approval"/>
+            <field name="groups" eval="[(4, ref('assetflow.group_assetflow_admin'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="perm_read">1</field>
+            <field name="perm_write">1</field>
+            <field name="perm_create">1</field>
+            <field name="perm_unlink">1</field>
+        </record>
+
+        <!-- ============================================================
+             System Alert Record Rules
+             ============================================================ -->
+        <record id="rule_system_alert_employee" model="ir.rule">
+            <field name="name">System Alert: Employee reads all alerts</field>
+            <field name="model_id" ref="model_af_system_alert"/>
+            <field name="groups" eval="[(4, ref('assetflow.group_assetflow_employee'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="perm_read">1</field>
+            <field name="perm_write">0</field>
+            <field name="perm_create">0</field>
+            <field name="perm_unlink">0</field>
+        </record>
+
+        <record id="rule_system_alert_manager" model="ir.rule">
+            <field name="name">System Alert: Manager manages all</field>
+            <field name="model_id" ref="model_af_system_alert"/>
+            <field name="groups" eval="[(4, ref('assetflow.group_assetflow_manager'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="perm_read">1</field>
+            <field name="perm_write">1</field>
+            <field name="perm_create">1</field>
+            <field name="perm_unlink">0</field>
+        </record>
+
+        <record id="rule_system_alert_admin" model="ir.rule">
+            <field name="name">System Alert: Admin unrestricted</field>
+            <field name="model_id" ref="model_af_system_alert"/>
+            <field name="groups" eval="[(4, ref('assetflow.group_assetflow_admin'))]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="perm_read">1</field>
+            <field name="perm_write">1</field>
+            <field name="perm_create">1</field>
+            <field name="perm_unlink">1</field>
+        </record>
+
+    </data>
+</odoo>

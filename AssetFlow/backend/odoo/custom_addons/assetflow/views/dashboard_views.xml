@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- ============================================================
+             Dashboard Client Action
+             ============================================================ -->
+        <record id="action_assetflow_dashboard" model="ir.actions.client">
+            <field name="name">AssetFlow Dashboard</field>
+            <field name="tag">assetflow_dashboard</field>
+        </record>
+
+    </data>
+</odoo>

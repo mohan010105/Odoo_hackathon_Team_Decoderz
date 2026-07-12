@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- ============================================================
+             System Alert: Tree View
+             ============================================================ -->
+        <record id="view_af_system_alert_tree" model="ir.ui.view">
+            <field name="name">af.system.alert.tree</field>
+            <field name="model">af.system.alert</field>
+            <field name="arch" type="xml">
+                <tree string="System Alerts" default_order="detected_at desc"
+                      decoration-danger="severity == 'critical'"
+                      decoration-warning="severity == 'high'"
+                      decoration-info="status == 'active'"
+                      decoration-success="status == 'resolved'"
+                      decoration-muted="status == 'acknowledged'">
+                    <field name="name"/>
+                    <field name="detected_at" widget="datetime"/>
+                    <field name="alert_type" widget="badge"/>
+                    <field name="title"/>
+                    <field name="asset_id" optional="show"/>
+                    <field name="employee_id" optional="show"/>
+                    <field name="department_id" optional="show"/>
+                    <field name="severity" widget="badge"
+                           decoration-danger="severity == 'critical'"
+                           decoration-warning="severity == 'high'"
+                           decoration-info="severity == 'medium'"
+                           decoration-success="severity == 'low'"/>
+                    <field name="status" widget="badge"
+                           decoration-info="status == 'active'"
+                           decoration-warning="status == 'acknowledged'"
+                           decoration-success="status == 'resolved'"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- ============================================================
+             System Alert: Form View
+             ============================================================ -->
+        <record id="view_af_system_alert_form" model="ir.ui.view">
+            <field name="name">af.system.alert.form</field>
+            <field name="model">af.system.alert</field>
+            <field name="arch" type="xml">
+                <form string="System Alert" create="false" delete="false">
+                    <header>
+                        <button name="action_acknowledge" type="object"
+                                string="Acknowledge" class="btn-warning"
+                                invisible="status != 'active'"
+                                groups="assetflow.group_assetflow_manager"/>
+                        <button name="action_resolve" type="object"
+                                string="Resolve" class="btn-success"
+                                invisible="status == 'resolved'"
+                                groups="assetflow.group_assetflow_manager"/>
+                        <field name="status" widget="statusbar"
+                               statusbar_visible="active,acknowledged,resolved"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="title" readonly="1"/>
+                            </h1>
+                            <h4>
+                                <field name="name" readonly="1"/>
+                            </h4>
+                        </div>
+                        <group>
+                            <group string="Alert Details">
+                                <field name="alert_type"/>
+                                <field name="severity"/>
+                                <field name="detected_at"/>
+                            </group>
+                            <group string="Context">
+                                <field name="asset_id"/>
+                                <field name="employee_id"/>
+                                <field name="department_id"/>
+                            </group>
+                        </group>
+                        <group string="Description">
+                            <field name="description" nolabel="1" colspan="2"/>
+                        </group>
+                        <group string="Resolution" invisible="status == 'active'">
+                            <field name="acknowledged_by"/>
+                            <field name="acknowledged_at"/>
+                            <field name="resolved_at"/>
+                        </group>
+                        <group string="Technical" groups="assetflow.group_assetflow_admin">
+                            <field name="related_model"/>
+                            <field name="related_record_id"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- ============================================================
+             System Alert: Search View
+             ============================================================ -->
+        <record id="view_af_system_alert_search" model="ir.ui.view">
+            <field name="name">af.system.alert.search</field>
+            <field name="model">af.system.alert</field>
+            <field name="arch" type="xml">
+                <search string="Search System Alerts">
+                    <field name="title"/>
+                    <field name="description"/>
+                    <field name="asset_id"/>
+                    <field name="employee_id"/>
+                    <field name="department_id"/>
+                    <separator/>
+                    <filter string="Active" name="active_alerts"
+                            domain="[('status', '=', 'active')]"/>
+                    <filter string="Acknowledged" name="acknowledged"
+                            domain="[('status', '=', 'acknowledged')]"/>
+                    <filter string="Resolved" name="resolved"
+                            domain="[('status', '=', 'resolved')]"/>
+                    <separator/>
+                    <filter string="Critical" name="critical"
+                            domain="[('severity', '=', 'critical')]"/>
+                    <filter string="High" name="high"
+                            domain="[('severity', '=', 'high')]"/>
+                    <separator/>
+                    <filter string="Overdue Returns" name="overdue_return"
+                            domain="[('alert_type', '=', 'overdue_return')]"/>
+                    <filter string="Warranty Expiry" name="warranty_expiry"
+                            domain="[('alert_type', '=', 'warranty_expiry')]"/>
+                    <filter string="Inactive Assets" name="inactive_asset"
+                            domain="[('alert_type', '=', 'inactive_asset')]"/>
+                    <filter string="Maintenance" name="maintenance"
+                            domain="[('alert_type', 'in', ['maintenance_delay', 'critical_maintenance'])]"/>
+                    <separator/>
+                    <group expand="0" string="Group By">
+                        <filter string="Type" name="group_type"
+                                context="{'group_by': 'alert_type'}"/>
+                        <filter string="Severity" name="group_severity"
+                                context="{'group_by': 'severity'}"/>
+                        <filter string="Status" name="group_status"
+                                context="{'group_by': 'status'}"/>
+                        <filter string="Department" name="group_department"
+                                context="{'group_by': 'department_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- ============================================================
+             System Alert: Action
+             ============================================================ -->
+        <record id="action_af_system_alert" model="ir.actions.act_window">
+            <field name="name">System Alerts</field>
+            <field name="res_model">af.system.alert</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_af_system_alert_search"/>
+            <field name="context">{'search_default_active_alerts': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No system alerts.
+                </p>
+                <p>Alerts will appear when the system detects overdue returns, warranty expiry, or other critical conditions.</p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

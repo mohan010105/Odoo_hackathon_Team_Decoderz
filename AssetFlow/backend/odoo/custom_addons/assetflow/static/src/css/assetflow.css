@@ -1,0 +1,140 @@
+/* =======================================================================
+   AssetFlow – Custom Stylesheet
+   Extends Odoo 18 backend styles with AssetFlow brand tokens.
+   ======================================================================= */
+
+/* -----------------------------------------------------------------------
+   Brand Colours
+   ----------------------------------------------------------------------- */
+:root {
+    --af-primary:       #2563eb;   /* Indigo-600 */
+    --af-primary-dark:  #1d4ed8;   /* Indigo-700 */
+    --af-success:       #16a34a;   /* Green-600  */
+    --af-warning:       #d97706;   /* Amber-600  */
+    --af-danger:        #dc2626;   /* Red-600    */
+    --af-info:          #0891b2;   /* Cyan-600   */
+    --af-muted:         #6b7280;   /* Gray-500   */
+    --af-surface:       #f9fafb;   /* Gray-50    */
+    --af-border:        #e5e7eb;   /* Gray-200   */
+}
+
+/* -----------------------------------------------------------------------
+   Asset Tag – monospace highlight
+   ----------------------------------------------------------------------- */
+.o_field_highlight .o_field_widget,
+.o_field_highlight input {
+    font-family: 'Spline Sans Mono', 'Courier New', monospace;
+    font-weight: 600;
+    color: var(--af-primary);
+    letter-spacing: 0.05em;
+}
+
+/* -----------------------------------------------------------------------
+   Status badge overrides
+   ----------------------------------------------------------------------- */
+.badge.text-bg-success { background-color: var(--af-success) !important; }
+.badge.text-bg-warning { background-color: var(--af-warning) !important; color: #fff !important; }
+.badge.text-bg-danger  { background-color: var(--af-danger)  !important; }
+.badge.text-bg-primary { background-color: var(--af-primary) !important; }
+.badge.text-bg-info    { background-color: var(--af-info)    !important; color: #fff !important; }
+
+/* -----------------------------------------------------------------------
+   Stat buttons – consistent sizing
+   ----------------------------------------------------------------------- */
+.oe_button_box .oe_stat_button {
+    min-width: 96px;
+}
+
+/* -----------------------------------------------------------------------
+   List view – tighter row spacing for data density
+   ----------------------------------------------------------------------- */
+.o_list_view .o_data_row td {
+    padding-top: 6px;
+    padding-bottom: 6px;
+}
+
+/* -----------------------------------------------------------------------
+   Kanban – card polish
+   ----------------------------------------------------------------------- */
+.o_kanban_view .o_kanban_record {
+    border-left: 3px solid var(--af-primary);
+    border-radius: 6px;
+}
+
+.o_kanban_view .o_kanban_record:hover {
+    border-left-color: var(--af-primary-dark);
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.12);
+}
+
+/* -----------------------------------------------------------------------
+   Form – sheet header polish
+   ----------------------------------------------------------------------- */
+.o_form_view .o_form_sheet {
+    background-color: var(--af-surface);
+}
+
+/* -----------------------------------------------------------------------
+   Dashboard (placeholder for Phase 2 OWL component)
+   ----------------------------------------------------------------------- */
+.af_dashboard {
+    padding: 24px;
+}
+
+.af_dashboard .af_kpi_grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.af_dashboard .af_kpi_card {
+    background: #fff;
+    border: 1px solid var(--af-border);
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+}
+
+.af_dashboard .af_kpi_card .af_kpi_value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--af-primary);
+}
+
+.af_dashboard .af_kpi_card .af_kpi_label {
+    font-size: 0.8rem;
+    color: var(--af-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: 4px;
+}
+
+/* -----------------------------------------------------------------------
+   Unified Activity Center & Timeline
+   ----------------------------------------------------------------------- */
+.af_timeline_card {
+    border-left: 4px solid var(--af-muted);
+    margin-bottom: 12px;
+    background: #fff;
+    border-radius: 4px;
+    padding: 12px;
+    transition: all 0.2s ease-in-out;
+}
+.af_timeline_card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+.af_timeline_card.priority_critical { border-left-color: var(--af-danger); }
+.af_timeline_card.priority_high { border-left-color: var(--af-warning); }
+.af_timeline_card.priority_medium { border-left-color: var(--af-primary); }
+.af_timeline_card.priority_low { border-left-color: var(--af-success); }
+
+/* System alert indicators */
+.af_alert_card {
+    background-color: #fff5f5;
+    border: 1px solid #feb2b2;
+    border-left: 4px solid var(--af-danger);
+    border-radius: 6px;
+    padding: 16px;
+    margin-bottom: 16px;
+}
+

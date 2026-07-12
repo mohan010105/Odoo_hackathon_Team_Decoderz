@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- ============================================================
+             List View
+             ============================================================ -->
+        <record id="view_af_transfer_request_list" model="ir.ui.view">
+            <field name="name">af.transfer.request.list</field>
+            <field name="model">af.transfer.request</field>
+            <field name="arch" type="xml">
+                <list string="Transfer Requests"
+                    decoration-muted="status == 'cancelled'"
+                    decoration-success="status == 'completed'"
+                    decoration-warning="status == 'approved'"
+                    decoration-danger="status == 'rejected'">
+                    <field name="name" string="Transfer Number"/>
+                    <field name="asset_id"/>
+                    <field name="current_holder_id"/>
+                    <field name="requested_employee_id"/>
+                    <field name="requested_department_id"/>
+                    <field name="request_date"/>
+                    <field name="status" widget="badge"
+                        decoration-info="status == 'pending'"
+                        decoration-warning="status == 'approved'"
+                        decoration-success="status == 'completed'"
+                        decoration-danger="status == 'rejected'"
+                        decoration-muted="status == 'cancelled'"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- ============================================================
+             Form View
+             ============================================================ -->
+        <record id="view_af_transfer_request_form" model="ir.ui.view">
+            <field name="name">af.transfer.request.form</field>
+            <field name="model">af.transfer.request</field>
+            <field name="arch" type="xml">
+                <form string="Transfer Request">
+                    <header>
+                        <button name="action_approve" string="Approve"
+                            type="object" class="oe_highlight"
+                            invisible="status != 'pending'"
+                            groups="assetflow.group_assetflow_manager"/>
+                        <button name="action_reject" string="Reject"
+                            type="object"
+                            invisible="status != 'pending'"
+                            groups="assetflow.group_assetflow_manager"/>
+                        <button name="action_complete" string="Complete Transfer"
+                            type="object" class="oe_highlight"
+                            invisible="status != 'approved'"
+                            groups="assetflow.group_assetflow_manager"/>
+                        <button name="action_cancel" string="Cancel Request"
+                            type="object"
+                            invisible="status not in ['pending', 'approved']"/>
+                        <field name="status" widget="statusbar"
+                            statusbar_visible="pending,approved,rejected,completed,cancelled"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" string="Transfer Number"/>
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group string="Source Asset">
+                                <field name="asset_id" options="{'no_create': True}" readonly="status != 'pending'"/>
+                                <field name="current_holder_id" readonly="1"/>
+                            </group>
+                            <group string="Requested Destination">
+                                <field name="requested_employee_id" options="{'no_create': True}" readonly="status != 'pending'"/>
+                                <field name="requested_department_id" options="{'no_create': True}" readonly="status != 'pending'"/>
+                                <field name="request_date" readonly="status != 'pending'"/>
+                            </group>
+                        </group>
+                        <group string="Transfer Details">
+                            <field name="reason" placeholder="Explain why the asset needs to be transferred..." readonly="status != 'pending'"/>
+                        </group>
+                        <notebook>
+                            <page string="Remarks" name="remarks">
+                                <field name="remarks" placeholder="Add approval/rejection remarks here..." readonly="status in ['completed', 'rejected', 'cancelled']"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <chatter/>
+                </form>
+            </field>
+        </record>
+
+        <!-- ============================================================
+             Search View
+             ============================================================ -->
+        <record id="view_af_transfer_request_search" model="ir.ui.view">
+            <field name="name">af.transfer.request.search</field>
+            <field name="model">af.transfer.request</field>
+            <field name="arch" type="xml">
+                <search string="Search Transfer Requests">
+                    <field name="name"/>
+                    <field name="asset_id"/>
+                    <field name="current_holder_id"/>
+                    <field name="requested_employee_id"/>
+                    <field name="requested_department_id"/>
+                    <separator/>
+                    <filter string="Pending" name="pending" domain="[('status', '=', 'pending')]"/>
+                    <filter string="Approved" name="approved" domain="[('status', '=', 'approved')]"/>
+                    <filter string="Completed" name="completed" domain="[('status', '=', 'completed')]"/>
+                    <filter string="Rejected" name="rejected" domain="[('status', '=', 'rejected')]"/>
+                    <filter string="Cancelled" name="cancelled" domain="[('status', '=', 'cancelled')]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Asset" name="group_asset" context="{'group_by': 'asset_id'}"/>
+                        <filter string="Current Holder" name="group_holder" context="{'group_by': 'current_holder_id'}"/>
+                        <filter string="Requested Employee" name="group_req_employee" context="{'group_by': 'requested_employee_id'}"/>
+                        <filter string="Requested Department" name="group_req_dept" context="{'group_by': 'requested_department_id'}"/>
+                        <filter string="Status" name="group_status" context="{'group_by': 'status'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- ============================================================
+             Window Action
+             ============================================================ -->
+        <record id="action_af_transfer_request" model="ir.actions.act_window">
+            <field name="name">Transfer Requests</field>
+            <field name="res_model">af.transfer.request</field>
+            <field name="view_mode">list,form</field>
+            <field name="search_view_id" ref="view_af_transfer_request_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first transfer request
+                </p>
+                <p>Transfer allocated assets from one employee to another with manager approval workflows.</p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

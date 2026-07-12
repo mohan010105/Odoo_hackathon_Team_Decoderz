@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- ============================================================
+             List View
+             ============================================================ -->
+        <record id="view_af_department_list" model="ir.ui.view">
+            <field name="name">af.department.list</field>
+            <field name="model">af.department</field>
+            <field name="arch" type="xml">
+                <list string="Departments" decoration-muted="status == 'inactive'">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="head_id"/>
+                    <field name="employee_count" string="Employees"/>
+                    <field name="asset_count" string="Assets"/>
+                    <field name="status" widget="badge"
+                        decoration-success="status == 'active'"
+                        decoration-danger="status == 'inactive'"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- ============================================================
+             Form View
+             ============================================================ -->
+        <record id="view_af_department_form" model="ir.ui.view">
+            <field name="name">af.department.form</field>
+            <field name="model">af.department</field>
+            <field name="arch" type="xml">
+                <form string="Department">
+                    <header>
+                        <button name="action_activate" string="Activate"
+                            type="object" class="oe_highlight"
+                            invisible="status == 'active'"
+                            groups="assetflow.group_assetflow_admin"/>
+                        <button name="action_deactivate" string="Deactivate"
+                            type="object" confirm="Deactivate this department?"
+                            invisible="status == 'inactive'"
+                            groups="assetflow.group_assetflow_admin"/>
+                        <field name="status" widget="statusbar"
+                            statusbar_visible="active,inactive"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="%(action_af_employee)d" type="action"
+                                class="oe_stat_button" icon="fa-users"
+                                context="{'default_department_id': active_id}"
+                                groups="assetflow.group_assetflow_manager">
+                                <field name="employee_count" widget="statinfo" string="Employees"/>
+                            </button>
+                            <button name="%(action_af_asset)d" type="action"
+                                class="oe_stat_button" icon="fa-cube"
+                                context="{'default_department_id': active_id}"
+                                groups="assetflow.group_assetflow_manager">
+                                <field name="asset_count" widget="statinfo" string="Assets"/>
+                            </button>
+                        </div>
+                        <group>
+                            <group string="General Information">
+                                <field name="name" placeholder="e.g. Information Technology"/>
+                                <field name="code" placeholder="e.g. IT"/>
+                                <field name="head_id"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="description" placeholder="Optional department description…"/>
+                        </group>
+                        <notebook>
+                            <page string="Employees" name="employees">
+                                <field name="employee_ids" readonly="1">
+                                    <list>
+                                        <field name="employee_id"/>
+                                        <field name="name"/>
+                                        <field name="role"/>
+                                        <field name="status" widget="badge"
+                                            decoration-success="status == 'active'"
+                                            decoration-warning="status == 'on_leave'"
+                                            decoration-danger="status == 'inactive'"/>
+                                    </list>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <chatter/>
+                </form>
+            </field>
+        </record>
+
+        <!-- ============================================================
+             Search View
+             ============================================================ -->
+        <record id="view_af_department_search" model="ir.ui.view">
+            <field name="name">af.department.search</field>
+            <field name="model">af.department</field>
+            <field name="arch" type="xml">
+                <search string="Search Departments">
+                    <field name="name" string="Name"/>
+                    <field name="code" string="Code"/>
+                    <field name="head_id" string="Department Head"/>
+                    <separator/>
+                    <filter string="Active" name="active" domain="[('status','=','active')]"/>
+                    <filter string="Inactive" name="inactive" domain="[('status','=','inactive')]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Status" name="group_status" context="{'group_by': 'status'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- ============================================================
+             Window Action
+             ============================================================ -->
+        <record id="action_af_department" model="ir.actions.act_window">
+            <field name="name">Departments</field>
+            <field name="res_model">af.department</field>
+            <field name="view_mode">list,form</field>
+            <field name="search_view_id" ref="view_af_department_search"/>
+            <field name="context">{'search_default_active': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first department
+                </p>
+                <p>Departments organise your employees and assets.</p>
+            </field>
+        </record>
+
+    </data>
+</odoo>
