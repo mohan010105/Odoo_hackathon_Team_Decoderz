@@ -44,8 +44,8 @@ access_af_allocation_history_admin,af.allocation.history.admin,model_af_allocati
 # -------------------------------------------------------------------
 # af.activity
 # -------------------------------------------------------------------
-access_af_activity_employee,af.activity.employee,model_af_activity,assetflow.group_assetflow_employee,1,0,0,0
-access_af_activity_manager,af.activity.manager,model_af_activity,assetflow.group_assetflow_manager,1,0,0,0
+access_af_activity_employee,af.activity.employee,model_af_activity,assetflow.group_assetflow_employee,1,1,0,0
+access_af_activity_manager,af.activity.manager,model_af_activity,assetflow.group_assetflow_manager,1,1,0,0
 access_af_activity_admin,af.activity.admin,model_af_activity,assetflow.group_assetflow_admin,1,1,1,1
 # -------------------------------------------------------------------
 # af.notification

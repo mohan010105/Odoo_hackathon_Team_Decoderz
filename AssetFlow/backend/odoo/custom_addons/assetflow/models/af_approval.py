@@ -241,6 +241,4 @@ class AfApproval(models.Model):
             })
         except Exception as exc:
             _logger.warning("Could not log approval activity: %s", exc)
-```
 
-,Description:

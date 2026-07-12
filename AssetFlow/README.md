@@ -50,6 +50,13 @@ AssetFlow/
 | Employee | `af.employee` | Staff member within a department |
 | Asset Category | `af.asset.category` | Taxonomy for classifying assets |
 | Asset | `af.asset` | Physical or digital company asset |
+| Asset Allocation | `af.asset.allocation` | Transaction tracking asset allocation to employees |
+| Transfer Request | `af.transfer.request` | Request to transfer an allocated asset between employees |
+| Allocation History | `af.allocation.history` | Immutable audit trail of all allocation changes |
+| Activity | `af.activity` | Centralized immutable activity feed across all modules |
+| Notification | `af.notification` | Per-user notification with category, priority, and status |
+| Approval | `af.approval` | Centralized approval queue for workflows |
+| System Alert | `af.system.alert` | Automated alerts for critical system conditions |
 
 ---
 
@@ -71,6 +78,110 @@ AssetFlow/
 - **Department deactivation** is blocked if active employees remain.
 - **Employee deactivation** is blocked if assets are still allocated.
 - **Category deactivation** is blocked if non-disposed assets use the category.
+- **Activities are immutable** — they can be archived but never deleted.
+- **Allocation history** cannot be deleted — it is an immutable audit log.
+- **Transfer requests** automatically create approval records in the Approval Center.
+- **System alerts** are de-duplicated — repeat scans will not create duplicate alerts.
+
+---
+
+## Screen 10: Unified Activity Center & Notification Hub
+
+### Activity Center
+
+Centralized, immutable activity feed tracking all operations across every module.
+
+| Field | Description |
+|---|---|
+| Activity ID | Auto-generated: `ACT-000001` |
+| Activity Type | 19 types: `asset_created`, `transfer_approved`, `audit_completed`, etc. |
+| Module | Source module: `asset`, `allocation`, `transfer`, `booking`, `maintenance`, `audit`, `report`, `auth`, `system` |
+| Priority | `low`, `medium`, `high`, `critical` |
+| Status | `unread`, `read`, `archived` |
+| Date Group | Computed: `Today`, `Yesterday`, `Last 7 Days`, `Last 30 Days`, `Older` |
+
+**Key features:**
+- Immutable — `unlink()` blocked; archive-only policy
+- Activities logged automatically by `ActivityService.log_activity()`
+- All models call the service layer instead of creating records directly
+- Timeline supports pagination, keyword search, and multi-field filtering
+
+### Notification Center
+
+Per-user notification system with 6 categories and full lifecycle management.
+
+| Feature | Details |
+|---|---|
+| Categories | `success`, `info`, `warning`, `critical`, `approval`, `reminder` |
+| Priorities | `low`, `medium`, `high`, `critical` |
+| Status | `unread` → `read` → `archived` |
+| Auto-Generation | Created via `ActivityService` when `notify_users` is specified |
+| Self-Notification Skip | Users are not notified about their own actions |
+
+### Approval Center
+
+Centralized approval queue for all workflow approvals.
+
+| Feature | Details |
+|---|---|
+| Types | `transfer`, `booking`, `maintenance`, `audit` |
+| Actions | Approve, Reject, Bulk Approve, Bulk Reject |
+| Integration | Transfer requests auto-create approval records |
+| Sync | Approval decisions propagate back to source records |
+| Activity Logging | Every approval decision is logged in the Activity Center |
+
+### System Alerts
+
+Automated scanning for critical conditions, run daily via cron.
+
+| Scanner | Alert Type | Severity |
+|---|---|---|
+| Overdue Returns | `overdue_return` | High |
+| Inactive Assets (30+ days maintenance) | `inactive_asset` | Medium |
+| Warranty Expiry (within 30 days) | `warranty_expiry` | Medium |
+| Maintenance Delay (14+ days) | `maintenance_delay` | High |
+
+**Lifecycle:** `active` → `acknowledged` → `resolved`
+
+### API Endpoints
+
+| Endpoint | Method | Description |
+|---|---|---|
+| `/assetflow/activities` | GET | Paginated activity timeline |
+| `/assetflow/activities/count` | GET | Unread and today counts |
+| `/assetflow/activities/mark-read` | POST | Mark activities as read |
+| `/assetflow/activities/archive` | POST | Archive activities |
+| `/assetflow/notifications` | GET | User's notifications |
+| `/assetflow/notifications/count` | GET | Notification counts |
+| `/assetflow/notifications/mark-read` | POST | Mark notifications read |
+| `/assetflow/notifications/mark-all-read` | POST | Mark all as read |
+| `/assetflow/approvals` | GET | List approvals |
+| `/assetflow/approvals/approve` | POST | Approve requests |
+| `/assetflow/approvals/reject` | POST | Reject requests |
+| `/assetflow/alerts` | GET | Active system alerts |
+| `/assetflow/alerts/acknowledge` | POST | Acknowledge alert |
+| `/assetflow/alerts/resolve` | POST | Resolve alert |
+| `/assetflow/alerts/count` | GET | Alert counts |
+| `/assetflow/dashboard/kpis` | GET | Dashboard KPIs |
+| `/assetflow/dashboard/summary` | GET | Full dashboard summary |
+
+### Service Layer Architecture
+
+All business logic is encapsulated in service classes. Controllers and models never build queries directly.
+
+```
+Controller → Service → Model
+   ↓             ↓
+ JSON         ORM / DB
+```
+
+| Service | Responsibility |
+|---|---|
+| `ActivityService` | Activity logging, notification generation, timeline queries |
+| `NotificationService` | CRUD, bulk operations, count queries |
+| `AlertService` | Scan delegation, active alert queries |
+| `DashboardService` | KPI aggregation, breakdown queries |
+| `SequenceService` | Centralized ID generation |
 
 ---
 
@@ -207,10 +318,12 @@ npm run dev
 
 ## Future Roadmap
 
-| Phase | Features |
-|---|---|
-| **Phase 2** | Asset Allocation workflow, Transfer requests, Booking system |
-| **Phase 3** | Maintenance scheduling, Preventive maintenance |
-| **Phase 4** | Notifications, Email alerts, Activity reminders |
-| **Phase 5** | QR code generation, Audit trail, AI-assisted condition assessment |
-| **Phase 6** | Advanced analytics, Department ranking, Asset health scores |
+| Phase | Status | Features |
+|---|---|---|
+| **Phase 1** | ✅ Complete | Departments, Employees, Asset Categories, Assets, Dashboard |
+| **Phase 2** | ✅ Complete | Asset Allocation, Transfer Requests, Allocation History |
+| **Phase 3** | ✅ Complete | Unified Activity Center, Notification Hub, Approval Center, System Alerts |
+| **Phase 4** | 🔜 Planned | WebSocket real-time push, Email notifications |
+| **Phase 5** | 🔜 Planned | Resource Booking, Maintenance scheduling |
+| **Phase 6** | 🔜 Planned | QR code generation, AI-assisted condition assessment |
+| **Phase 7** | 🔜 Planned | Advanced analytics, Department ranking, Asset health scores |

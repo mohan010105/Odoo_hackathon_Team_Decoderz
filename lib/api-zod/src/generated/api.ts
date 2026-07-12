@@ -1586,3 +1586,128 @@ export const ListActivityLogsResponseItem = zod.object({
 export const ListActivityLogsResponse = zod.array(ListActivityLogsResponseItem)
 
 
+/**
+ * @summary Register a new employee account
+ */
+export const AuthSignUpBody = zod.object({
+  "name": zod.string(),
+  "employeeId": zod.string(),
+  "departmentId": zod.number(),
+  "email": zod.string(),
+  "phone": zod.string().optional(),
+  "password": zod.string(),
+  "role": zod.string()
+})
+
+export const AuthSignUpResponse = zod.object({
+  "accessToken": zod.string(),
+  "refreshToken": zod.string(),
+  "user": zod.object({
+  "id": zod.number(),
+  "employeeId": zod.string(),
+  "name": zod.string(),
+  "email": zod.string(),
+  "phone": zod.string().nullish(),
+  "role": zod.string(),
+  "departmentId": zod.number().nullish(),
+  "departmentName": zod.string().nullish()
+})
+})
+
+
+/**
+ * @summary Login to AssetFlow
+ */
+export const AuthLoginBody = zod.object({
+  "email": zod.string(),
+  "password": zod.string()
+})
+
+export const AuthLoginResponse = zod.object({
+  "accessToken": zod.string(),
+  "refreshToken": zod.string(),
+  "user": zod.object({
+  "id": zod.number(),
+  "employeeId": zod.string(),
+  "name": zod.string(),
+  "email": zod.string(),
+  "phone": zod.string().nullish(),
+  "role": zod.string(),
+  "departmentId": zod.number().nullish(),
+  "departmentName": zod.string().nullish()
+})
+})
+
+
+/**
+ * @summary Logout and clear active session
+ */
+export const AuthLogoutResponse = zod.unknown()
+
+
+/**
+ * @summary Request password reset email
+ */
+export const AuthForgotPasswordBody = zod.object({
+  "email": zod.string()
+})
+
+export const AuthForgotPasswordResponse = zod.unknown()
+
+
+/**
+ * @summary Reset user password with token
+ */
+export const AuthResetPasswordBody = zod.object({
+  "token": zod.string(),
+  "password": zod.string()
+})
+
+export const AuthResetPasswordResponse = zod.unknown()
+
+
+/**
+ * @summary Get current authenticated employee details
+ */
+export const AuthMeResponse = zod.object({
+  "id": zod.number(),
+  "employeeId": zod.string(),
+  "name": zod.string(),
+  "email": zod.string(),
+  "phone": zod.string().nullish(),
+  "role": zod.string(),
+  "departmentId": zod.number().nullish(),
+  "departmentName": zod.string().nullish()
+})
+
+
+/**
+ * @summary Update user details
+ */
+export const AuthUpdateProfileBody = zod.object({
+  "name": zod.string(),
+  "phone": zod.string()
+})
+
+export const AuthUpdateProfileResponse = zod.object({
+  "id": zod.number(),
+  "employeeId": zod.string(),
+  "name": zod.string(),
+  "email": zod.string(),
+  "phone": zod.string().nullish(),
+  "role": zod.string(),
+  "departmentId": zod.number().nullish(),
+  "departmentName": zod.string().nullish()
+})
+
+
+/**
+ * @summary Change password for active user
+ */
+export const AuthChangePasswordBody = zod.object({
+  "newPassword": zod.string()
+})
+
+export const AuthChangePasswordResponse = zod.unknown()
+
+

@@ -364,6 +364,13 @@ export async function customFetch<T = unknown>(
 
   if (!response.ok) {
     const errorData = await parseErrorBody(response, method);
+    if (response.status === 401) {
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("af_access_token");
+        localStorage.removeItem("af_refresh_token");
+        window.dispatchEvent(new Event("auth_session_expired"));
+      }
+    }
     throw new ApiError(response, errorData, requestInfo);
   }
 

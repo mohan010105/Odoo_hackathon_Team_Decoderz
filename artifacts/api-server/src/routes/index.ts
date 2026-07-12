@@ -12,10 +12,19 @@ import bookingsRouter from "./bookings";
 import maintenancesRouter from "./maintenances";
 import notificationsRouter from "./notifications";
 import activityLogsRouter from "./activity_logs";
+import uploadRouter from "./upload";
+import authRouter from "./auth";
+import { requireAuth } from "../middlewares/auth";
 
 const router: IRouter = Router();
 
+// Unprotected routes
 router.use(healthRouter);
+router.use(authRouter);
+
+// Protected business routes
+router.use(requireAuth);
+
 router.use(dashboardRouter);
 router.use(departmentsRouter);
 router.use(employeesRouter);
@@ -28,6 +37,7 @@ router.use(bookingsRouter);
 router.use(maintenancesRouter);
 router.use(notificationsRouter);
 router.use(activityLogsRouter);
+router.use(uploadRouter);
 
 export default router;
 

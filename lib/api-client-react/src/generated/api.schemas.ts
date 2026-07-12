@@ -819,6 +819,55 @@ export interface ActivityLog {
   timestamp: string;
 }
 
+export interface SignUpInput {
+  name: string;
+  employeeId: string;
+  departmentId: number;
+  email: string;
+  phone?: string;
+  password: string;
+  role: string;
+}
+
+export interface LoginInput {
+  email: string;
+  password: string;
+}
+
+export interface ResetPasswordInput {
+  token: string;
+  password: string;
+}
+
+export interface UpdateProfileInput {
+  name: string;
+  phone: string;
+}
+
+export interface ChangePasswordInput {
+  newPassword: string;
+}
+
+export interface AuthUser {
+  id: number;
+  employeeId: string;
+  name: string;
+  email: string;
+  /** @nullable */
+  phone?: string | null;
+  role: string;
+  /** @nullable */
+  departmentId?: number | null;
+  /** @nullable */
+  departmentName?: string | null;
+}
+
+export interface AuthResponse {
+  accessToken: string;
+  refreshToken: string;
+  user: AuthUser;
+}
+
 export type ListDepartmentsParams = {
 status?: ListDepartmentsStatus;
 };
@@ -988,5 +1037,9 @@ export type AssignMaintenanceBody = {
 export type ResolveMaintenanceBody = {
   resolutionNotes: string;
   actualCost?: number;
+};
+
+export type AuthForgotPasswordBody = {
+  email: string;
 };
 

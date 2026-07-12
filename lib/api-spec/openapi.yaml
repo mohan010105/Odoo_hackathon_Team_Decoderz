@@ -28,6 +28,8 @@ tags:
     description: System notification management
   - name: activity-logs
     description: System activity logs
+  - name: auth
+    description: Authentication operations
 
 paths:
   /healthz:
@@ -1479,6 +1481,152 @@ paths:
                 items:
                   $ref: "#/components/schemas/ActivityLog"
 
+  /auth/signup:
+    post:
+      operationId: authSignUp
+      tags: [auth]
+      summary: Register a new employee account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SignUpInput"
+      responses:
+        "201":
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "400":
+          description: Validation or duplicate error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /auth/login:
+    post:
+      operationId: authLogin
+      tags: [auth]
+      summary: Login to AssetFlow
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginInput"
+      responses:
+        "200":
+          description: Successful authentication
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "401":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /auth/logout:
+    post:
+      operationId: authLogout
+      tags: [auth]
+      summary: Logout and clear active session
+      responses:
+        "200":
+          description: Successfully logged out
+
+  /auth/forgot-password:
+    post:
+      operationId: authForgotPassword
+      tags: [auth]
+      summary: Request password reset email
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+              required: [email]
+      responses:
+        "200":
+          description: Secure reset request acknowledged
+
+  /auth/reset-password:
+    post:
+      operationId: authResetPassword
+      tags: [auth]
+      summary: Reset user password with token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ResetPasswordInput"
+      responses:
+        "200":
+          description: Password reset successfully
+
+  /auth/me:
+    get:
+      operationId: authMe
+      tags: [auth]
+      summary: Get current authenticated employee details
+      responses:
+        "200":
+          description: Logged-in user profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthUser"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /auth/update-profile:
+    post:
+      operationId: authUpdateProfile
+      tags: [auth]
+      summary: Update user details
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateProfileInput"
+      responses:
+        "200":
+          description: Profile updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthUser"
+
+  /auth/change-password:
+    post:
+      operationId: authChangePassword
+      tags: [auth]
+      summary: Change password for active user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChangePasswordInput"
+      responses:
+        "200":
+          description: Password changed successfully
+
 components:
   schemas:
     HealthStatus:
@@ -2448,3 +2596,109 @@ components:
         - newState
         - userId
         - timestamp
+
+    SignUpInput:
+      type: object
+      properties:
+        name:
+          type: string
+        employeeId:
+          type: string
+        departmentId:
+          type: integer
+        email:
+          type: string
+        phone:
+          type: string
+        password:
+          type: string
+        role:
+          type: string
+      required:
+        - name
+        - employeeId
+        - departmentId
+        - email
+        - password
+        - role
+
+    LoginInput:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      required:
+        - email
+        - password
+
+    ResetPasswordInput:
+      type: object
+      properties:
+        token:
+          type: string
+        password:
+          type: string
+      required:
+        - token
+        - password
+
+    UpdateProfileInput:
+      type: object
+      properties:
+        name:
+          type: string
+        phone:
+          type: string
+      required:
+        - name
+        - phone
+
+    ChangePasswordInput:
+      type: object
+      properties:
+        newPassword:
+          type: string
+      required:
+        - newPassword
+
+    AuthUser:
+      type: object
+      properties:
+        id:
+          type: integer
+        employeeId:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: ["string", "null"]
+        role:
+          type: string
+        departmentId:
+          type: ["integer", "null"]
+        departmentName:
+          type: ["string", "null"]
+      required:
+        - id
+        - employeeId
+        - name
+        - email
+        - role
+
+    AuthResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+        refreshToken:
+          type: string
+        user:
+          $ref: "#/components/schemas/AuthUser"
+      required:
+        - accessToken
+        - refreshToken
+        - user

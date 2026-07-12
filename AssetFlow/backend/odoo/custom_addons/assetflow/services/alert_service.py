@@ -76,4 +76,3 @@ class AlertService:
         return self.env['af.system.alert'].search_count([
             ('status', '=', 'active'),
         ])
-```

@@ -265,13 +265,99 @@ class AfSystemAlert(models.Model):
         return created
 
     @api.model
+    def scan_warranty_expiry(self):
+        """Scan for assets whose warranty is expiring within 30 days."""
+        from datetime import timedelta
+        from dateutil.relativedelta import relativedelta
+        today = fields.Date.today()
+        warning_horizon = today + timedelta(days=30)
+
+        assets = self.env['af.asset'].search([
+            ('status', 'not in', ['disposed']),
+            ('purchase_date', '!=', False),
+            ('category_id', '!=', False),
+        ])
+        created = 0
+        for asset in assets:
+            if not asset.category_id.warranty_period:
+                continue
+            warranty_end = asset.purchase_date + relativedelta(
+                months=asset.category_id.warranty_period
+            )
+            if today <= warranty_end <= warning_horizon:
+                existing = self.search_count([
+                    ('alert_type', '=', 'warranty_expiry'),
+                    ('related_record_id', '=', asset.id),
+                    ('related_model', '=', 'af.asset'),
+                    ('status', '!=', 'resolved'),
+                ])
+                if not existing:
+                    self.create({
+                        'alert_type': 'warranty_expiry',
+                        'title': f"Warranty Expiring: {asset.display_name}",
+                        'description': (
+                            f"Warranty for asset {asset.display_name} "
+                            f"(category: {asset.category_id.name}) expires on "
+                            f"{warranty_end}. Consider renewal or replacement."
+                        ),
+                        'severity': 'medium',
+                        'asset_id': asset.id,
+                        'department_id': asset.department_id.id if asset.department_id else False,
+                        'related_record_id': asset.id,
+                        'related_model': 'af.asset',
+                    })
+                    created += 1
+        _logger.info("Warranty expiry scan: %d new alerts created.", created)
+        return created
+
+    @api.model
+    def scan_maintenance_delay(self):
+        """Scan for assets under maintenance for more than 14 days (shorter threshold than inactive)."""
+        from datetime import timedelta
+        cutoff = fields.Date.today() - timedelta(days=14)
+        stale = self.env['af.asset'].search([
+            ('status', '=', 'under_maintenance'),
+            ('write_date', '<', fields.Datetime.to_string(
+                fields.Datetime.from_string(str(cutoff) + ' 00:00:00')
+            )),
+        ])
+        created = 0
+        for asset in stale:
+            existing = self.search_count([
+                ('alert_type', '=', 'maintenance_delay'),
+                ('related_record_id', '=', asset.id),
+                ('related_model', '=', 'af.asset'),
+                ('status', '!=', 'resolved'),
+            ])
+            if not existing:
+                self.create({
+                    'alert_type': 'maintenance_delay',
+                    'title': f"Maintenance Delay: {asset.display_name}",
+                    'description': (
+                        f"Asset {asset.display_name} has been under maintenance "
+                        f"for more than 14 days. Please review and expedite."
+                    ),
+                    'severity': 'high',
+                    'asset_id': asset.id,
+                    'department_id': asset.department_id.id if asset.department_id else False,
+                    'related_record_id': asset.id,
+                    'related_model': 'af.asset',
+                })
+                created += 1
+        _logger.info("Maintenance delay scan: %d new alerts created.", created)
+        return created
+
+    @api.model
     def run_all_scans(self):
         """Run all alert scans — called by scheduled action."""
         _logger.info("Running all system alert scans...")
         results = {
             'overdue_returns': self.scan_overdue_returns(),
             'inactive_assets': self.scan_inactive_assets(),
+            'warranty_expiry': self.scan_warranty_expiry(),
+            'maintenance_delay': self.scan_maintenance_delay(),
         }
         total = sum(results.values())
         _logger.info("System alert scan complete: %d total new alerts.", total)
         return results
+

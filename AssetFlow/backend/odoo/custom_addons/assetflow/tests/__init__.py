@@ -5,5 +5,4 @@ from . import test_asset_category
 from . import test_asset
 from . import test_allocation
 from . import test_activity_center
-
-
+from . import test_transfer_notification
